@@ -1,0 +1,318 @@
+/* "Space Grotesk", sans-serif */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+/* "League Spartan", sans-serif */
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
+/* "Pathway Extreme", sans-serif */
+@import url('https://fonts.googleapis.com/css2?family=Pathway+Extreme:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&display=swap');
+
+:root{
+    --primary: #14532D;          /* Deep Forest Green */
+    --primary-light: #22C55E;   /* Fresh Green */
+    --accent: #F4B942;          /* Harvest Yellow */
+    --background: #FFFDF7;      /* Warm Cream */
+    --surface: #FFFFFF;         /* White */
+    --text: #17211B;            /* Dark Charcoal */
+    --secondary-text: #647067;  /* Muted Green-Gray */
+    --border: #E2E8E3;          /* Soft Green-Gray */
+    --success: #16A34A;         /* Success */
+    --warning: #D97706;         /* Warning */
+    --error: #DC2626;           /* Error */
+}
+
+.text-color-primary{
+    color: var(--primary) !important;
+}
+
+.text-color-primary-light{
+    color: var(--primary-light) !important;
+}
+
+.text-color-accent{
+    color: var(--accent) !important;
+}
+
+.text-color-text{
+    color: var(--text) !important;
+}
+
+.text-color-secondary-text{
+    color: var(--secondary-text) !important;
+}
+
+.text-color-border{
+    color: var(--border) !important;
+}
+
+.text-color-success{
+    color: var(--success) !important;
+}
+
+.text-color-warning{
+    color: var(--warning) !important;
+}
+
+.text-color-error{
+    color: var(--error) !important;
+}
+
+.text-bold{
+    font-weight: bold !important;
+}
+
+/* Background Color */
+
+.bgcolor-background{
+    background-color: var(--background) !important;
+}
+
+.bgcolor-surface{
+    background-color: var(--surface) !important;
+}
+
+/* only centers horizontally and works properly when the element has a constrained width/max-width */
+.center-element{
+    margin: 0 auto !important;
+}
+
+.center-text{
+    text-align: center !important;
+}
+
+/* abs-center is for an element you specifically want positioned at the center of its containing block. */
+.abs-center {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+.flex-center{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.flex-column{
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.flex-row{
+    display: flex !important;
+    flex-direction: row !important;
+}
+
+.display-block{
+    display: block !important;
+}
+
+/* Fonts */
+
+/* "Space Grotesk", sans-serif */
+.font-space-grotesk{
+    font-family: "Space Grotesk", sans-serif !important;
+}
+
+/* "League Spartan", sans-serif */
+.font-league-spartan{
+    font-family: "League Spartan", sans-serif !important;
+}
+
+/* Gradient Text */
+.three-gradient-text {
+    background: linear-gradient(
+        90deg,
+        var(--text),
+        var(--accent),
+        var(--primary)
+    ) !important;
+
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+
+    -webkit-text-fill-color: transparent !important;
+}
+
+/* =========================
+   Reusable Data Tables
+   ========================= */
+
+.data-table-container {
+    margin-top: 1.5rem;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    background: rgba(255, 255, 255, 0.85);
+
+    border-radius: 2rem;
+    overflow: hidden;
+}
+
+.data-table thead th {
+    padding: 1.2rem 1.5rem;
+    text-align: left;
+
+    color: var(--primary3);
+    border-bottom: 1.5px solid var(--primary4);
+
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.data-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.data-table tbody td {
+    padding: 1.25rem 1.5rem;
+
+    color: var(--text-primary4);
+    border-bottom: 1.5px solid var(--primary6);
+
+    vertical-align: middle;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table td strong {
+    display: block;
+    color: var(--primary1);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.data-table td span {
+    display: block;
+    margin-top: 3px;
+    color: var(--text-primary4);
+    font-size: 14px;
+}
+
+.no-data {
+    margin-top: 1rem;
+    padding: 2rem;
+
+    text-align: center;
+
+    color: var(--text-primary4);
+}
+
+/* View */
+
+.view-link {
+    color: var(--primary);
+    text-decoration: none;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.view-link:hover {
+    color: var(--accent);
+}
+
+/* Manage Pages Heading and Text */
+
+.dashboard-heading {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.dashboard-text {
+    margin-top: 6px;
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 400;
+}
+
+/* Gradient border */
+
+.gradient-border {
+    position: relative;
+    border: none;
+}
+
+.gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    padding: 2px;
+    border-radius: inherit;
+
+    background: linear-gradient(
+        45deg,
+        var(--text),
+        var(--accent),
+        var(--primary)
+    );
+
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+
+    pointer-events: none;
+}
+
+/* Form Text Inputs */
+
+.text-input {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 6px 8px;
+
+    border: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: 1px solid var(--primary4);
+
+    outline: none;
+
+    background-color: #FFFFFF50;
+
+    color: var(--text-primary1);
+    font-size: 16px;
+
+    transition: border-width 0.15s ease, background-color 0.15s ease;
+}
+
+.text-input:focus {
+    border-bottom: 2px solid var(--primary3);
+    background-color: rgb(255 255 255 / 45%);
+    font-weight: 600;
+}
+
+.text-input::placeholder {
+    color: var(--text-primary4);
+    opacity: 0.8;
+}
