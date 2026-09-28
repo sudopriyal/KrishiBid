@@ -18,6 +18,7 @@ from routes import *
 app.register_blueprint(admin_bp)
 app.register_blueprint(buyer_bp)
 app.register_blueprint(farmer_bp)
+app.register_blueprint(auth_bp)
 
 with app.app_context():
     db.create_all()

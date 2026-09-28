@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up | KrishiBid</title>
+</head>
+<body>
+    <h2>Create Account</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+        <input type="text" name="name" placeholder="Full name" required>
+        <br><br>
+
+        <input type="email" name="email" placeholder="Email address" required>
+        <br><br>
+
+        <input type="text" name="phone" placeholder="Phone number">
+        <br><br>
+
+        <select name="role" required>
+            <option value="">Select account type</option>
+            <option value="farmer">Farmer</option>
+            <option value="buyer">Buyer</option>
+        </select>
+        <br><br>
+
+        <input type="password" name="password" placeholder="Password" required>
+        <br><br>
+
+        <input type="password" name="confirm_password" placeholder="Confirm password" required>
+        <br><br>
+
+        <button type="submit">Create Account</button>
+    </form>
+
+    <p>
+        Already have an account?
+        <a href="{{ url_for('auth.login') }}">Login</a>
+    </p>
+</body>
+</html>
