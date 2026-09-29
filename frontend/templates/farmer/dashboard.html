@@ -120,6 +120,21 @@
         color: var(--success);
     }
 
+    .status-draft {
+        background: rgba(100, 116, 139, 0.12);
+        color: #475569;
+    }
+
+    .status-sold {
+        background: rgba(59, 130, 246, 0.12);
+        color: #2563eb;
+    }
+
+    .status-expired {
+        background: rgba(239, 68, 68, 0.12);
+        color: #dc2626;
+    }
+
     .view-link {
         color: var(--primary);
         text-decoration: none;
@@ -179,7 +194,7 @@
             <div class="col-6 col-lg-3">
                 <div class="stat-card">
                     <div class="stat-icon">🌾</div>
-                    <h3>12</h3>
+                    <h3>{{ active_listings_count }}</h3>
                     <p>Active Listings</p>
                 </div>
             </div>
@@ -187,7 +202,7 @@
             <div class="col-6 col-lg-3">
                 <div class="stat-card">
                     <div class="stat-icon">💰</div>
-                    <h3>₹48,500</h3>
+                    <h3>₹{{ "{:,.2f}".format(total_earnings) }}</h3>
                     <p>Total Earnings</p>
                 </div>
             </div>
@@ -195,7 +210,7 @@
             <div class="col-6 col-lg-3">
                 <div class="stat-card">
                     <div class="stat-icon">🤝</div>
-                    <h3>18</h3>
+                    <h3>{{ total_bids_count }}</h3>
                     <p>Total Bids</p>
                 </div>
             </div>
@@ -203,7 +218,7 @@
             <div class="col-6 col-lg-3">
                 <div class="stat-card">
                     <div class="stat-icon">📦</div>
-                    <h3>7</h3>
+                    <h3>{{ completed_sales_count }}</h3>
                     <p>Completed Sales</p>
                 </div>
             </div>
@@ -215,38 +230,35 @@
                 <div class="dashboard-card">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="mb-0">My Listings</h5>
-                        <a href="#" class="view-link">View All</a>
                     </div>
 
-                    <div class="listing d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="listing-name">Wheat</div>
-                            <div class="listing-info">
-                                500 kg • ₹2,400 / quintal
+                    {% for item in listings %}
+                        <div class="listing d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="listing-name">{{ item.crop_name }}</div>
+                                <div class="listing-info">
+                                    {{ item.quantity }} {{ item.quantity_unit }} • ₹{{ item.starting_price }} / {{ item.quantity_unit }}
+                                    {% if item.location %} • {{ item.location }}{% endif %}
+                                </div>
                             </div>
+                            {% if item.status == 'active' %}
+                                <span class="status">Active</span>
+                            {% elif item.status == 'sold' %}
+                                <span class="status status-sold">Sold</span>
+                            {% elif item.status == 'draft' %}
+                                <span class="status status-draft">Draft</span>
+                            {% else %}
+                                <span class="status status-expired">{{ item.status|title if item.status else 'Unknown' }}</span>
+                            {% endif %}
                         </div>
-                        <span class="status">Active</span>
-                    </div>
-
-                    <div class="listing d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="listing-name">Cotton</div>
-                            <div class="listing-info">
-                                300 kg • ₹6,200 / quintal
-                            </div>
+                    {% else %}
+                        <div class="py-4 text-center text-muted">
+                            <p class="mb-2">You haven't listed any produce yet. 🌱</p>
+                            <a href="{{ url_for('farmer.sell_produce', user_id=user.id if user else session.get('user_id')) }}" class="add-btn btn-sm">
+                                Create First Listing
+                            </a>
                         </div>
-                        <span class="status">Active</span>
-                    </div>
-
-                    <div class="listing d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="listing-name">Groundnut</div>
-                            <div class="listing-info">
-                                200 kg • ₹5,500 / quintal
-                            </div>
-                        </div>
-                        <span class="status">Active</span>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -260,19 +272,9 @@
                         <span>Sell Produce</span>
                     </a>
 
-                    <a href="#" class="quick-action">
+                    <a href="{{ url_for('farmer.sell_produce', user_id=user.id if user else session.get('user_id')) }}" class="quick-action">
                         <span class="action-icon">📋</span>
                         <span>Manage Listings</span>
-                    </a>
-
-                    <a href="#" class="quick-action">
-                        <span class="action-icon">🤝</span>
-                        <span>View Bids</span>
-                    </a>
-
-                    <a href="#" class="quick-action">
-                        <span class="action-icon">💳</span>
-                        <span>Sales & Earnings</span>
                     </a>
                 </div>
             </div>
@@ -282,23 +284,20 @@
                 <div class="dashboard-card">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="mb-0">Recent Activity</h5>
-                        <a href="#" class="view-link">View All</a>
                     </div>
 
-                    <div class="listing">
-                        🌾 New bid received on <strong>Wheat</strong>
-                        <span class="listing-info"> — 10 minutes ago</span>
-                    </div>
-
-                    <div class="listing">
-                        💰 Sale completed for <strong>Groundnut</strong>
-                        <span class="listing-info"> — Yesterday</span>
-                    </div>
-
-                    <div class="listing">
-                        📦 <strong>Cotton</strong> listing was created
-                        <span class="listing-info"> — 2 days ago</span>
-                    </div>
+                    {% if recent_bids %}
+                        {% for bid, listing in recent_bids %}
+                            <div class="listing">
+                                🌾 New bid of <strong>₹{{ bid.bid_amount }}</strong> received on <strong>{{ listing.crop_name }}</strong>
+                                <span class="listing-info"> — {{ bid.bid_time.strftime('%Y-%m-%d %H:%M') if bid.bid_time else '' }}</span>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="py-3 text-muted">
+                            No recent activity found. As buyers bid on your listings, activity will appear here!
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
