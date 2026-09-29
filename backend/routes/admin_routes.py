@@ -17,7 +17,7 @@ def dashboard():
     buyers = BuyerProfile.query.join(User).all()
     
     return render_template(
-        "admin/admin_dashboard.html",
+        "admin/dashboard.html",
         total_farmers=total_farmers,
         total_buyers=total_buyers,
         pending_verifications=pending_verifications,
@@ -32,9 +32,9 @@ def verify_buyer(buyer_id, action):
     if action == "approve":
         buyer.verification_status = "approved"
         buyer.verified_at = datetime.utcnow()
-        flash(f"Buyer profile for {buyer.business_name or buyer.user.username} approved.", "success")
+        flash(f"Buyer profile for {buyer.business_name or buyer.user.name} approved.", "success")
     elif action == "reject":
         buyer.verification_status = "rejected"
-        flash(f"Buyer profile for {buyer.business_name or buyer.user.username} rejected.", "warning")
+        flash(f"Buyer profile for {buyer.business_name or buyer.user.name} rejected.", "warning")
     db.session.commit()
     return redirect(url_for("admin.dashboard"))
