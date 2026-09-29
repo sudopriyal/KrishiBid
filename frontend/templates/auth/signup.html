@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up | KrishiBid{% endblock title %}
+
+{% block style %}
+
+<style>
+
+.signup-page {
+    min-height: calc(100vh - 64px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 20px;
+
+    background: var(--background);
+    font-family: "Space Grotesk", sans-serif;
+}
+
+
+/* ---------- Signup Card ---------- */
+
+.signup-card {
+    width: 100%;
+    max-width: 460px;
+
+    padding: 38px 42px;
+
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    box-shadow: 0 12px 35px rgba(20, 83, 45, 0.08);
+}
+
+
+/* ---------- Heading ---------- */
+
+.signup-card h2 {
+    margin: 0;
+
+    color: var(--primary);
+
+    font-family: "League Spartan", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+
+    text-align: center;
+}
+
+.welcome {
+    margin: 7px 0 30px;
+
+    color: var(--secondary-text);
+
+    font-size: 14px;
+    text-align: center;
+}
+
+
+/* ---------- Form ---------- */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--text);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* ---------- Inputs ---------- */
+
+.form-control {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 9px 2px;
+
+    border: none;
+    border-bottom: 1.5px solid var(--border);
+    border-radius: 0;
+
+    outline: none;
+
+    background: transparent;
+
+    color: var(--text);
+
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.form-control::placeholder {
+    color: var(--secondary-text);
+    opacity: 0.55;
+}
+
+.form-control:focus {
+    border-bottom: 2px solid var(--primary-light);
+
+    box-shadow: none;
+}
+
+
+/* ---------- Select ---------- */
+
+select.form-control {
+    cursor: pointer;
+
+    color: var(--secondary-text);
+}
+
+select.form-control:valid {
+    color: var(--text);
+}
+
+
+/* ---------- Submit Button ---------- */
+
+.signup-btn {
+    display: block;
+
+    width: auto;
+    min-width: 180px;
+
+    margin: 28px auto 0;
+    padding: 11px 28px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: var(--primary);
+    color: var(--surface);
+
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.signup-btn:hover {
+    background: var(--primary-light);
+    color: var(--surface);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 15px rgba(34, 197, 94, 0.18);
+}
+
+.signup-btn:active {
+    transform: translateY(0);
+}
+
+
+/* ---------- Login Text ---------- */
+
+.login-text {
+    margin: 25px 0 0;
+
+    color: var(--secondary-text);
+
+    font-size: 13px;
+    text-align: center;
+}
+
+.login-text a {
+    color: var(--primary);
+
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login-text a:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
+
+/* ---------- Tablet ---------- */
+
+@media (max-width: 768px) {
+
+    .signup-page {
+        min-height: calc(100vh - 60px);
+        padding: 35px 20px;
+    }
+
+    .signup-card {
+        max-width: 440px;
+        padding: 34px 35px;
+    }
+
+    .signup-card h2 {
+        font-size: 30px;
+    }
+}
+
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 576px) {
+
+    .signup-page {
+        min-height: calc(100vh - 56px);
+
+        padding: 25px 15px;
+
+        align-items: flex-start;
+    }
+
+    .signup-card {
+        max-width: 100%;
+
+        padding: 28px 24px;
+
+        border-radius: 15px;
+    }
+
+    .signup-card h2 {
+        font-size: 28px;
+    }
+
+    .welcome {
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .signup-btn {
+        width: 100%;
+        max-width: 220px;
+    }
+}
+
+</style>
+
+{% endblock style %}
+
+
+{% block body %}
+
+<div class="signup-page">
+
+    <div class="signup-card">
+
+        <h2>Join KrishiBid 🌱</h2>
+
+        <p class="welcome">
+            Create your account and get started.
+        </p>
+
+
+        <form method="POST">
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+
+                <input
+                    id="name"
+                    type="text"
+                    name="name"
+                    class="form-control"
+                    placeholder="Enter your full name"
+                    required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+
+                <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter your email address"
+                    required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+
+                <input
+                    id="phone"
+                    type="text"
+                    name="phone"
+                    class="form-control"
+                    placeholder="Enter your phone number"
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="role">Account Type</label>
+
+                <select
+                    id="role"
+                    name="role"
+                    class="form-control"
+                    required
+                >
+                    <option value="" disabled selected>
+                        Select account type
+                    </option>
+
+                    <option value="farmer">Farmer</option>
+                    <option value="buyer">Buyer</option>
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="password">Password</label>
+
+                <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Create a password"
+                    required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+
+                <input
+                    id="confirm_password"
+                    type="password"
+                    name="confirm_password"
+                    class="form-control"
+                    placeholder="Confirm your password"
+                    required
+                >
+            </div>
+
+
+            <button
+                type="submit"
+                class="signup-btn"
+            >
+                Create Account
+            </button>
+
+        </form>
+
+
+        <p class="login-text">
+            Already have an account?
+            <a href="{{ url_for('auth.login') }}">Login</a>
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock body %}

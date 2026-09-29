@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+
+{% block title %}Login | KrishiBid{% endblock title %}
+
+{% block style %}
+
+<style>
+
+.login-page {
+    min-height: calc(100vh - 64px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 20px;
+
+    background: var(--background);
+    font-family: "Space Grotesk", sans-serif;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 430px;
+
+    padding: 38px 42px;
+
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    box-shadow: 0 12px 35px rgba(20, 83, 45, 0.08);
+}
+
+
+/* ---------- Heading ---------- */
+
+.login-card h2 {
+    margin: 0;
+
+    color: var(--primary);
+
+    font-family: "League Spartan", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+
+    text-align: center;
+}
+
+.welcome {
+    margin: 7px 0 30px;
+
+    color: var(--secondary-text);
+
+    font-size: 14px;
+    text-align: center;
+}
+
+
+/* ---------- Form ---------- */
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--text);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.form-control {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 9px 2px;
+
+    border: none;
+    border-bottom: 1.5px solid var(--border);
+    border-radius: 0;
+
+    outline: none;
+
+    background: transparent;
+
+    color: var(--text);
+
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.form-control::placeholder {
+    color: var(--secondary-text);
+    opacity: 0.55;
+}
+
+.form-control:focus {
+    border-bottom: 2px solid var(--primary-light);
+    box-shadow: none;
+}
+
+
+/* ---------- Login Button ---------- */
+
+.login-btn {
+    display: block;
+
+    width: auto;
+    min-width: 160px;
+
+    margin: 30px auto 0;
+
+    padding: 11px 28px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: var(--primary);
+    color: var(--surface);
+
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.login-btn:hover {
+    background: var(--primary-light);
+    color: var(--surface);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 15px rgba(34, 197, 94, 0.18);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+
+/* ---------- Signup Text ---------- */
+
+.signup-text {
+    margin: 25px 0 0;
+
+    color: var(--secondary-text);
+
+    font-size: 13px;
+    text-align: center;
+}
+
+.signup-text a {
+    color: var(--primary);
+
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.signup-text a:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
+
+/* ---------- Tablet ---------- */
+
+@media (max-width: 768px) {
+
+    .login-page {
+        min-height: calc(100vh - 60px);
+        padding: 35px 20px;
+    }
+
+    .login-card {
+        max-width: 410px;
+        padding: 34px 35px;
+    }
+
+    .login-card h2 {
+        font-size: 30px;
+    }
+}
+
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 576px) {
+
+    .login-page {
+        min-height: calc(100vh - 56px);
+
+        padding: 25px 15px;
+
+        align-items: flex-start;
+    }
+
+    .login-card {
+        max-width: 100%;
+
+        padding: 28px 24px;
+
+        border-radius: 15px;
+    }
+
+    .login-card h2 {
+        font-size: 28px;
+    }
+
+    .welcome {
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 19px;
+    }
+
+    .login-btn {
+        width: 100%;
+        max-width: 210px;
+    }
+}
+
+</style>
+
+{% endblock style %}
+
+
+{% block body %}
+
+<div class="login-page">
+
+    <div class="login-card">
+
+        <h2>Welcome Back 🌱</h2>
+
+        <p class="welcome">
+            Login to continue to KrishiBid.
+        </p>
+
+
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter your email address"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Enter your password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-btn"
+            >
+                Login
+            </button>
+
+        </form>
+
+
+        <p class="signup-text">
+
+            New to KrishiBid?
+
+            <a href="{{ url_for('auth.signup') }}">
+                Create an account
+            </a>
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock body %}

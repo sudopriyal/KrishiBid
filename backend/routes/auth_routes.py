@@ -65,7 +65,7 @@ def signup():
             flash("Could not create your account. Please try again.", "danger")
             return redirect(url_for("auth.signup"))
 
-    return render_template("signup.html")
+    return render_template("auth/signup.html")
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
@@ -94,10 +94,23 @@ def login():
         if user.role == "admin":
             return redirect(url_for("admin.dashboard"))
 
-        # Change these later when you add buyer/farmer dashboard routes.
-        return redirect(url_for("home"))
+        elif user.role == "farmer":
+            return redirect(
+                url_for(
+                    "farmer.dashboard",
+                    user_id=user.id
+                )
+            )
 
-    return render_template("login.html")
+        elif user.role == "buyer":
+            return redirect(
+                url_for(
+                    "buyer.dashboard",
+                    user_id=user.id
+                )
+            )
+
+    return render_template("auth/login.html")
 
 
 @auth_bp.route("/logout")

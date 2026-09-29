@@ -19,6 +19,10 @@
     --error: #DC2626;           /* Error */
 }
 
+body {
+    padding-top: 64px;
+}
+
 .text-color-primary{
     color: var(--primary) !important;
 }
@@ -315,4 +319,380 @@
 .text-input::placeholder {
     color: var(--text-primary4);
     opacity: 0.8;
+}
+
+.navbar{
+    box-shadow: 0px 0px 10px 1px var(--text-primary);
+}
+
+.navigation-heading{
+    color: var(--text-primary);
+    padding: 15px 0 0 15px !important;
+}
+
+.nav-link{
+    color: var(--text-primary) !important;
+    background-color: var(--background) !important;
+    border-radius: 5px;
+    padding-left: 15px !important;
+    padding: 10px !important;
+}
+
+.nav-link:hover{
+    background-color: var(--border) !important;
+    color: var(--primary-hover) !important;
+}
+
+.nav-actions{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dashboard-links{
+    margin: auto 0;
+}
+
+.dashboard-links a{
+    text-decoration: none;
+    color: var(--primary) !important;
+    display: inline-block;
+    padding: 0.5rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--primary);
+    transition: all 0.25s ease;
+}
+
+.dashboard-links a:hover{
+    transform: translateY(-2px);
+    color: var(--primary-hover) !important;
+    border: 1.5px solid var(--primary-hover);
+}
+
+/* =========================
+   Login & Sign Up Buttons
+   ========================= */
+
+.auth-btn {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+
+/* Login Button */
+.login-btn {
+    color: var(--primary);
+    background-color: transparent;
+    border: 1.5px solid var(--primary);
+}
+
+.login-btn:hover {
+    color: var(--surface);
+    background-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+/* Sign Up Button */
+.signup-btn {
+    color: var(--surface);
+    background-color: var(--primary);
+    border: 1.5px solid var(--primary);
+}
+
+.signup-btn:hover {
+    color: var(--surface);
+    background-color: var(--primary-light);
+    border-color: var(--primary-light);
+    transform: translateY(-2px);
+}
+
+/* ---------- Navbar ---------- */
+
+/* ---------- Fixed Navbar ---------- */
+
+.krishi-navbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+
+    width: 100% !important;
+    height: 64px;
+
+    padding: 0 28px;
+
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+
+    z-index: 9999 !important;
+}
+
+.krishi-navbar .container-fluid {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ---------- Logo ---------- */
+
+.krishi-navbar .navbar-brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px;
+
+    height: 100%;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.krishi-navbar .logo {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    object-fit: contain;
+}
+
+.krishi-navbar .logo-text {
+    width: auto;
+    height: 25px;
+    padding: 0;
+    object-fit: contain;
+}
+
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 768px) {
+
+    .krishi-navbar {
+        height: 60px;
+        padding: 0 20px;
+    }
+
+    .krishi-navbar .logo {
+        width: 37px;
+        height: 37px;
+    }
+
+    .krishi-navbar .logo-text {
+        height: 23px;
+    }
+
+    body {
+        padding-top: 60px;
+    }
+}
+
+
+@media (max-width: 576px) {
+
+    .krishi-navbar {
+        height: 56px;
+        padding: 0 15px;
+    }
+
+    .krishi-navbar .logo {
+        width: 36px;
+        height: 36px;
+    }
+
+    .krishi-navbar .logo-text {
+        height: 23px;
+    }
+
+    body {
+        padding-top: 56px;
+    }
+}
+
+.sidebar-toggle {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: var(--surface);
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+    background: var(--background);
+    border-color: var(--primary-light);
+}
+
+.sidebar-toggle:focus {
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+
+
+/* Bootstrap hamburger icon */
+
+.sidebar-toggle .navbar-toggler-icon {
+    background-image: none;
+
+    width: 20px;
+    height: 14px;
+
+    position: relative;
+
+    border-top: 2px solid var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+
+.sidebar-toggle .navbar-toggler-icon::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 4px;
+
+    width: 20px;
+    height: 2px;
+
+    background: var(--primary);
+}
+
+
+/* ---------- Sidebar ---------- */
+
+.krishi-sidebar {
+    width: 320px !important;
+
+    background: var(--background);
+
+    border-left: 1px solid var(--border);
+
+    box-shadow: -8px 0 30px rgba(23, 33, 27, 0.08);
+}
+
+
+/* ---------- Sidebar Header ---------- */
+
+.sidebar-header {
+    padding: 28px 26px 22px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h5 {
+    margin: 2px 0 0;
+
+    font-family: "League Spartan", sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+
+    color: var(--text);
+}
+
+.sidebar-label {
+    margin: 0;
+
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+
+    color: var(--primary-light);
+}
+
+
+/* ---------- Sidebar Body ---------- */
+
+.krishi-sidebar .offcanvas-body {
+    padding: 24px 20px;
+}
+
+
+/* ---------- Sidebar Links ---------- */
+
+.sidebar-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+
+    min-height: 52px;
+
+    padding: 0 18px;
+
+    border: 1px solid transparent;
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+
+    color: var(--text);
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.sidebar-link:hover {
+    background: var(--surface);
+    border-color: var(--border);
+
+    color: var(--primary);
+
+    transform: translateX(-2px);
+}
+
+
+/* ---------- Sign Up ---------- */
+
+.sidebar-signup {
+    background: var(--primary);
+    color: var(--surface);
+}
+
+.sidebar-signup:hover {
+    background: var(--primary-light);
+    border-color: var(--primary-light);
+
+    color: var(--surface);
+}
+
+
+/* ---------- Logout ---------- */
+
+.sidebar-logout {
+    margin-top: 8px;
+
+    border-color: var(--border);
+
+    color: var(--error);
+}
+
+.sidebar-logout:hover {
+    background: rgba(220, 38, 38, 0.06);
+    border-color: rgba(220, 38, 38, 0.2);
+
+    color: var(--error);
 }

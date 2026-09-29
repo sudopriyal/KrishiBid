@@ -17,7 +17,7 @@ def dashboard():
     buyers = BuyerProfile.query.join(User).all()
     
     return render_template(
-        "admin_dashboard.html",
+        "admin/admin_dashboard.html",
         total_farmers=total_farmers,
         total_buyers=total_buyers,
         pending_verifications=pending_verifications,

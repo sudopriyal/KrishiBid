@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% block title %}Farmer Dashboard | KrishiBid{% endblock title %}
+
+{% block style %}
+
+<style>
+    .dashboard {
+        background: var(--background);
+        min-height: 100vh;
+        padding: 30px 0;
+        font-family: "Space Grotesk", sans-serif;
+    }
+
+    .welcome h2 {
+        color: var(--primary);
+        font-family: "League Spartan", sans-serif;
+        font-size: 32px;
+        font-weight: 700;
+    }
+
+    .welcome p {
+        color: var(--secondary-text);
+        font-size: 16px;
+    }
+
+    .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 20px;
+        height: 100%;
+        transition: 0.2s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(20, 83, 45, 0.08);
+    }
+
+    .stat-icon {
+        font-size: 25px;
+        margin-bottom: 10px;
+    }
+
+    .stat-card h3 {
+        color: var(--primary);
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .stat-card p {
+        color: var(--secondary-text);
+        margin: 4px 0 0;
+        font-size: 14px;
+    }
+
+    .dashboard-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 22px;
+        height: 100%;
+    }
+
+    .dashboard-card h5 {
+        color: var(--text);
+        font-weight: 700;
+    }
+
+    .quick-action {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text);
+        margin-bottom: 10px;
+        transition: 0.2s;
+    }
+
+    .quick-action:hover {
+        border-color: var(--primary-light);
+        background: rgba(34, 197, 94, 0.06);
+        color: var(--primary);
+    }
+
+    .action-icon {
+        font-size: 20px;
+    }
+
+    .listing {
+        border-bottom: 1px solid var(--border);
+        padding: 14px 0;
+    }
+
+    .listing:last-child {
+        border-bottom: none;
+    }
+
+    .listing-name {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .listing-info {
+        font-size: 13px;
+        color: var(--secondary-text);
+    }
+
+    .status {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        background: rgba(34, 197, 94, 0.12);
+        color: var(--success);
+    }
+
+    .view-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .view-link:hover {
+        text-decoration: underline;
+    }
+
+    .add-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 9px;
+        padding: 10px 18px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.2s;
+        display: inline-block;
+    }
+
+    .add-btn:hover {
+        background: var(--primary-light);
+        color: var(--text);
+    }
+</style>
+
+{% endblock style %}
+
+{% block body %}
+
+<div class="dashboard">
+    <div class="container">
+
+        <!-- Welcome Block with Greeting and Sell Produce Button -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div class="welcome">
+                <h2 class="mb-1">
+                    {{ greeting if greeting else 'Good day' }}, {{ user.name if user and user.name else 'Farmer' }} 🌾
+                </h2>
+                <p class="mb-0">
+                    Sell your produce. Let buyers compete.
+                </p>
+            </div>
+
+            <div>
+                <a href="{{ url_for('farmer.sell_produce', user_id=user.id if user else session.get('user_id')) }}" class="add-btn">
+                    Sell Produce
+                </a>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3">
+                <div class="stat-card">
+                    <div class="stat-icon">🌾</div>
+                    <h3>12</h3>
+                    <p>Active Listings</p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <h3>₹48,500</h3>
+                    <p>Total Earnings</p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="stat-card">
+                    <div class="stat-icon">🤝</div>
+                    <h3>18</h3>
+                    <p>Total Bids</p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <h3>7</h3>
+                    <p>Completed Sales</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- My Listings -->
+            <div class="col-12 col-lg-7">
+                <div class="dashboard-card">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="mb-0">My Listings</h5>
+                        <a href="#" class="view-link">View All</a>
+                    </div>
+
+                    <div class="listing d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="listing-name">Wheat</div>
+                            <div class="listing-info">
+                                500 kg • ₹2,400 / quintal
+                            </div>
+                        </div>
+                        <span class="status">Active</span>
+                    </div>
+
+                    <div class="listing d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="listing-name">Cotton</div>
+                            <div class="listing-info">
+                                300 kg • ₹6,200 / quintal
+                            </div>
+                        </div>
+                        <span class="status">Active</span>
+                    </div>
+
+                    <div class="listing d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="listing-name">Groundnut</div>
+                            <div class="listing-info">
+                                200 kg • ₹5,500 / quintal
+                            </div>
+                        </div>
+                        <span class="status">Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="col-12 col-lg-5">
+                <div class="dashboard-card">
+                    <h5 class="mb-3">Quick Actions</h5>
+
+                    <a href="{{ url_for('farmer.sell_produce', user_id=user.id if user else session.get('user_id')) }}" class="quick-action">
+                        <span class="action-icon">🌱</span>
+                        <span>Sell Produce</span>
+                    </a>
+
+                    <a href="#" class="quick-action">
+                        <span class="action-icon">📋</span>
+                        <span>Manage Listings</span>
+                    </a>
+
+                    <a href="#" class="quick-action">
+                        <span class="action-icon">🤝</span>
+                        <span>View Bids</span>
+                    </a>
+
+                    <a href="#" class="quick-action">
+                        <span class="action-icon">💳</span>
+                        <span>Sales & Earnings</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="col-12">
+                <div class="dashboard-card">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="mb-0">Recent Activity</h5>
+                        <a href="#" class="view-link">View All</a>
+                    </div>
+
+                    <div class="listing">
+                        🌾 New bid received on <strong>Wheat</strong>
+                        <span class="listing-info"> — 10 minutes ago</span>
+                    </div>
+
+                    <div class="listing">
+                        💰 Sale completed for <strong>Groundnut</strong>
+                        <span class="listing-info"> — Yesterday</span>
+                    </div>
+
+                    <div class="listing">
+                        📦 <strong>Cotton</strong> listing was created
+                        <span class="listing-info"> — 2 days ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock body %}
