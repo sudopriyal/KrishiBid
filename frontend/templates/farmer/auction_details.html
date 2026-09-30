@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}Live Auction | {{ listing.crop_name }} | KrishiBid{% endblock title %}
+
+{% block style %}
+<style>
+    .auction-container {
+        padding: 30px 0;
+        font-family: "Space Grotesk", sans-serif;
+    }
+
+    .auction-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .crop-title {
+        font-family: "League Spartan", sans-serif;
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 32px;
+    }
+
+    .price-badge {
+        background: rgba(34, 197, 94, 0.12);
+        color: var(--success);
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 20px;
+    }
+
+    .timer-box {
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 20px;
+        text-align: center;
+    }
+
+    .timer-val {
+        font-weight: 700;
+        font-size: 24px;
+        color: #d97706;
+    }
+
+    .table-custom th {
+        background: #f8fafc;
+        color: var(--secondary-text);
+        font-weight: 600;
+        font-size: 13px;
+        text-transform: uppercase;
+        padding: 12px 16px;
+    }
+
+    .table-custom td {
+        padding: 14px 16px;
+        vertical-align: middle;
+    }
+
+    .btn-accept {
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 6px 16px;
+        font-weight: 600;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+    .btn-accept:hover {
+        background: var(--primary-light);
+        color: var(--text);
+    }
+</style>
+{% endblock style %}
+
+{% block body %}
+<div class="auction-container">
+    <div class="container">
+
+        <!-- Top Navigation -->
+        <div class="mb-3">
+            <a href="{{ url_for('farmer.dashboard', user_id=user.id) }}" class="text-decoration-none text-muted fw-bold">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Auction Summary Header -->
+        <div class="auction-card">
+            <div class="row align-items-center g-3">
+                <div class="col-12 col-md-7">
+                    <div class="d-flex align-items-center gap-3">
+                        <h2 class="crop-title mb-0">{{ listing.crop_name }}</h2>
+                        <span class="badge bg-secondary">{{ listing.quality_grade or 'Standard' }}</span>
+                        {% if auction.status == 'active' %}
+                            <span class="badge bg-success">Live Auction</span>
+                        {% elif auction.status == 'ended' %}
+                            <span class="badge bg-primary">Auction Ended</span>
+                        {% else %}
+                            <span class="badge bg-dark">{{ auction.status|title }}</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-muted mt-2 mb-0">
+                        📦 {{ listing.quantity }} {{ listing.quantity_unit }} • 📍 {{ listing.location or 'Not specified' }} • Starting Price: ₹{{ listing.starting_price }} / {{ listing.quantity_unit }}
+                    </p>
+                </div>
+
+                <div class="col-12 col-md-5">
+                    <div class="d-flex justify-content-md-end gap-3 align-items-center">
+                        <div class="timer-box">
+                            <small class="text-muted d-block">Time Remaining</small>
+                            <span class="timer-val" id="timer">Calculating...</span>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted d-block">Highest Bid</small>
+                            <span class="price-badge">₹{{ auction.current_highest_bid or listing.starting_price }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bids Table -->
+        <div class="auction-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Live Incoming Bids ({{ bids|length }})</h5>
+                <small class="text-muted">Auto-refreshes live every 3 seconds</small>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-custom mb-0">
+                    <thead>
+                        <tr>
+                            <th>Buyer Name</th>
+                            <th>Business Name</th>
+                            <th>Bid Amount (₹)</th>
+                            <th>Bid Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bids-tbody">
+                        {% for bid in bids %}
+                            <tr>
+                                <td><strong>{{ bid.buyer.user.name }}</strong></td>
+                                <td>{{ bid.buyer.business_name or 'Independent Buyer' }}</td>
+                                <td>
+                                    <span class="fw-bold text-success">₹{{ bid.bid_amount }}</span>
+                                </td>
+                                <td>{{ bid.bid_time.strftime('%H:%M:%S') if bid.bid_time else 'N/A' }}</td>
+                                <td>
+                                    {% if bid.status == 'accepted' %}
+                                        <span class="badge bg-success">Accepted & Won</span>
+                                    {% elif bid.status == 'rejected' %}
+                                        <span class="badge bg-secondary">Rejected</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Active</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if auction.status == 'active' and bid.status == 'active' %}
+                                        <form action="{{ url_for('farmer.accept_bid', bid_id=bid.id) }}" method="POST" onsubmit="return confirm('Accept this bid of ₹{{ bid.bid_amount }} and complete sale?');">
+                                            <button type="submit" class="btn-accept">Accept & Sell</button>
+                                        </form>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">
+                                    No bids received yet. Buyers will compete here in real-time as bids are placed! ⏳
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock body %}
+
+{% block script %}
+<script>
+    const endTime = new Date("{{ auction.end_time.isoformat() }}").getTime();
+
+    function updateTimer() {
+        const now = new Date().getTime();
+        const distance = endTime - now;
+
+        if (distance < 0) {
+            document.getElementById("timer").innerText = "Expired";
+            return;
+        }
+
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("timer").innerText = `${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+</script>
+{% endblock script %}

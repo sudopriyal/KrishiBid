@@ -95,7 +95,15 @@
 
                     {% if session.get("role") == "farmer" %}
                         <a
-                            href="{{ url_for('farmer.dashboard', user_id=session.get    ('user_id')) }}"
+                            href="{{ url_for('farmer.dashboard', user_id=session.get('user_id')) }}"
+                            class="sidebar-link"
+                        >
+                            <span>Dashboard</span>
+                        </a>
+
+                    {% elif session.get("role") == "buyer" %}
+                        <a
+                            href="{{ url_for('buyer.dashboard', user_id=session.get('user_id')) }}"
                             class="sidebar-link"
                         >
                             <span>Dashboard</span>

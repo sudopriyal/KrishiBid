@@ -1,2 +1,175 @@
 {% extends "base.html" %}
 
+{% block title %}Buyer Marketplace & Live Bidding | KrishiBid{% endblock title %}
+
+{% block style %}
+<style>
+    .buyer-dashboard {
+        background: var(--background);
+        min-height: 100vh;
+        padding: 30px 0;
+        font-family: "Space Grotesk", sans-serif;
+    }
+
+    .buyer-header h2 {
+        color: var(--primary);
+        font-family: "League Spartan", sans-serif;
+        font-size: 32px;
+        font-weight: 700;
+    }
+
+    .produce-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 22px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: 0.2s;
+    }
+
+    .produce-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(20, 83, 45, 0.08);
+    }
+
+    .crop-name {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        font-family: "League Spartan", sans-serif;
+    }
+
+    .crop-meta {
+        font-size: 14px;
+        color: var(--secondary-text);
+        margin-bottom: 12px;
+    }
+
+    .bid-box {
+        background: rgba(34, 197, 94, 0.06);
+        border: 1px solid rgba(34, 197, 94, 0.15);
+        border-radius: 10px;
+        padding: 10px 14px;
+        margin-bottom: 16px;
+    }
+
+    .bid-val {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .bid-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 9px;
+        padding: 10px 18px;
+        font-weight: 700;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        transition: 0.2s;
+    }
+
+    .bid-btn:hover {
+        background: var(--primary-light);
+        color: var(--text);
+    }
+
+    .banner-warning {
+        background: rgba(234, 179, 8, 0.15);
+        border: 1px solid rgba(234, 179, 8, 0.3);
+        color: #854d0e;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 24px;
+    }
+</style>
+{% endblock style %}
+
+{% block body %}
+<div class="buyer-dashboard">
+    <div class="container">
+
+        <!-- Verification Banner Notice -->
+        {% if buyer and buyer.verification_status != 'approved' %}
+            <div class="banner-warning d-flex align-items-center gap-3">
+                <span style="font-size: 24px;">⚠️</span>
+                <div>
+                    <strong>Account Verification Pending:</strong>
+                    Your buyer account verification is currently under review by our admin team. You can browse all live produce auctions, but placing bids requires an approved buyer account.
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Header & Search -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div class="buyer-header">
+                <h2>Live Produce Marketplace 🌾</h2>
+                <p class="text-muted mb-0">Browse fresh produce listings directly from farmers and participate in live competitive bidding.</p>
+            </div>
+
+            <div>
+                <form action="{{ url_for('buyer.dashboard', user_id=user.id) }}" method="GET" class="d-flex gap-2">
+                    <input type="text" name="q" class="form-control" placeholder="Search crops or location..." value="{{ request.args.get('q', '') }}">
+                    <button type="submit" class="btn btn-primary" style="background: var(--primary); border: none; border-radius: 8px;">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Produce Auctions Grid -->
+        <div class="row g-4">
+            {% for auction in auctions %}
+                {% set listing = auction.listing %}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="produce-card">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <h3 class="crop-name mb-0">{{ listing.crop_name }}</h3>
+                                <span class="badge bg-success">Live Auction</span>
+                            </div>
+
+                            <div class="crop-meta">
+                                🌾 {{ listing.crop_type or 'Standard' }} • {{ listing.quality_grade or 'Grade A' }}<br>
+                                📦 {{ listing.quantity }} {{ listing.quantity_unit }}<br>
+                                📍 {{ listing.location or 'Gujarat, India' }}
+                            </div>
+
+                            <p class="text-muted small mb-3">
+                                Listed by <strong>{{ listing.farmer.user.name }}</strong>
+                            </p>
+
+                            <div class="bid-box d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted d-block">Highest Bid</small>
+                                    <span class="bid-val">₹{{ auction.current_highest_bid or listing.starting_price }}</span>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted d-block">Starting Price</small>
+                                    <span class="fw-bold">₹{{ listing.starting_price }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <a href="{{ url_for('buyer.auction_details', auction_id=auction.id) }}" class="bid-btn">
+                                🤝 View & Place Bid
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <h4 class="text-muted">No active produce auctions found at the moment. 🌱</h4>
+                    <p class="text-muted">Check back soon or search for another crop!</p>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+{% endblock body %}
