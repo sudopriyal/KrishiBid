@@ -1,5 +1,1291 @@
 {% extends "base.html" %}
 
-{ block title }Homepage{ endblock title }
+{% block title %}KrishiBid | Eliminating Middlemen in Agriculture — Direct Farm Auctions{% endblock title %}
 
-This is the Homepage.
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+{% endblock style %}
+
+{% block body %}
+<!-- ==========================================================================
+     Hero Section
+     ========================================================================== -->
+<header class="hero-wrapper">
+    <div class="container hero-content">
+        <div class="row align-items-center g-5">
+            
+            <!-- Hero Left: Mission & Action -->
+            <div class="col-lg-7">
+                <div class="hackathon-badge">
+                    <i class="bi bi-award-fill tag-star"></i>
+                    <span>IEEE WIE ILS 2026 National Hackathon &bull; Team Runtime riders</span>
+                </div>
+
+                <h1 class="hero-title">
+                    Direct Farm-to-Buyer Auctions.<br>
+                    <span class="text-gradient-emerald">Zero Middlemen. Fair Prices.</span>
+                </h1>
+
+                <p class="hero-subtext">
+                    KrishiBid cuts out the 3 to 5 layers of predatory middlemen who siphon up to 35% of crop profits. 
+                    We connect smallholder farmers directly with verified wholesale buyers, food processors, and institutional retailers through 
+                    transparent, real-time digital bidding and escrow-backed security.
+                </p>
+
+                <!-- Hero Action CTAs -->
+                <div class="hero-cta-group">
+                    {% if session.get("user_id") and session.get("role") == "farmer" %}
+                        <a href="{{ url_for('farmer.sell_produce', user_id=session.get('user_id')) }}" class="btn-hero-primary">
+                            <i class="bi bi-plus-circle-fill"></i> Sell Your Harvest Now
+                        </a>
+                    {% elif session.get("user_id") and session.get("role") == "buyer" %}
+                        <a href="{{ url_for('buyer.dashboard', user_id=session.get('user_id')) }}" class="btn-hero-primary">
+                            <i class="bi bi-grid-3x3-gap-fill"></i> Access Live Marketplace
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('auth.signup') }}" class="btn-hero-primary">
+                            <i class="bi bi-shield-check"></i> Join KrishiBid Free
+                        </a>
+                    {% endif %}
+
+                    <a href="#live-auctions" class="btn-hero-secondary">
+                        <span class="live-indicator-dot me-1"></span> Explore Live Auctions
+                    </a>
+
+                    <a href="#calculator" class="btn-hero-calc ms-lg-2">
+                        <i class="bi bi-calculator"></i> Calculate Profit Boost
+                    </a>
+                </div>
+
+                <!-- Trust Badges List -->
+                <div class="hero-trust-badges">
+                    <div class="hero-trust-item">
+                        <i class="bi bi-patch-check-fill"></i> 100% Verified Farmer IDs
+                    </div>
+                    <div class="hero-trust-item">
+                        <i class="bi bi-lock-fill"></i> Escrow Protected Payouts
+                    </div>
+                    <div class="hero-trust-item">
+                        <i class="bi bi-graph-up-arrow"></i> Transparent Real-Time Bids
+                    </div>
+                    <div class="hero-trust-item">
+                        <i class="bi bi-truck"></i> Farm-Gate Pickup Support
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Right: Live Interactive Auction Showcase Card -->
+            <div class="col-lg-5">
+                <div class="hero-radar-card">
+                    <div class="radar-header">
+                        <span class="live-radar-tag">
+                            <span class="live-indicator-dot"></span> LIVE AUCTION ROOM
+                        </span>
+                        
+                        {% if active_auctions and active_auctions|length > 0 %}
+                            {% set top_auction = active_auctions[0] %}
+                            <span class="live-countdown-badge live-countdown-timer" data-end="{{ top_auction.end_time.isoformat() if top_auction.end_time else '' }}">
+                                <i class="bi bi-hourglass-split"></i> Live Clock
+                            </span>
+                        {% else %}
+                            <span class="live-countdown-badge">
+                                <i class="bi bi-hourglass-split"></i> 02h 45m remaining
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    {% if active_auctions and active_auctions|length > 0 %}
+                        {% set top_auction = active_auctions[0] %}
+                        {% set listing = top_auction.listing %}
+                        <div class="radar-commodity">
+                            <div class="commodity-thumb">
+                                {% if 'apple' in listing.crop_name|lower %}🍎
+                                {% elif 'tomato' in listing.crop_name|lower %}🍅
+                                {% elif 'pineapple' in listing.crop_name|lower %}🍍
+                                {% elif 'wheat' in listing.crop_name|lower %}🌾
+                                {% elif 'mango' in listing.crop_name|lower %}🥭
+                                {% else %}🌿{% endif %}
+                            </div>
+                            <div class="commodity-meta">
+                                <h4>{{ listing.crop_name }}</h4>
+                                <p>
+                                    <i class="bi bi-geo-alt-fill text-danger"></i> {{ listing.location or 'Bardoli, Surat' }}
+                                    <span class="badge bg-light text-dark border ms-1">{{ listing.quality_grade or 'Grade A' }}</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="radar-pricing-grid">
+                            <div>
+                                <div class="price-item-label">Lot Size</div>
+                                <div class="price-item-val">{{ listing.quantity }} {{ listing.quantity_unit }}</div>
+                            </div>
+                            <div>
+                                <div class="price-item-label">Current Highest Bid</div>
+                                <div class="price-item-val highlight">
+                                    ₹{{ "%.2f"|format(top_auction.current_highest_bid or top_auction.starting_price) }}
+                                    <small style="font-size: 11px; font-weight: normal; color: var(--secondary-text);">/{{ listing.quantity_unit }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Bidding Micro-ticker -->
+                        <div class="radar-recent-bids">
+                            <div class="recent-bid-entry">
+                                <span class="bidder-tag"><i class="bi bi-person-check-fill text-success"></i> Metro Wholesale Pune</span>
+                                <span class="bid-gain">+₹3.00</span>
+                                <span class="bid-time">1 min ago</span>
+                            </div>
+                            <div class="recent-bid-entry">
+                                <span class="bidder-tag"><i class="bi bi-person-check-fill text-success"></i> AgroFresh Surat</span>
+                                <span class="bid-gain">+₹2.00</span>
+                                <span class="bid-time">4 mins ago</span>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            {% if session.get("user_id") and session.get("role") == "buyer" %}
+                                <a href="{{ url_for('buyer.auction_details', auction_id=top_auction.id) }}" class="btn btn-hero-primary justify-content-center">
+                                    <i class="bi bi-lightning-charge-fill"></i> Place Live Bid Now
+                                </a>
+                            {% else %}
+                                <a href="{{ url_for('auth.login') }}" class="btn btn-hero-primary justify-content-center">
+                                    <i class="bi bi-box-arrow-in-right"></i> Log In to Bid on this Lot
+                                </a>
+                            {% endif %}
+                        </div>
+
+                    {% else %}
+                        <!-- Fallback Sample Lot -->
+                        <div class="radar-commodity">
+                            <div class="commodity-thumb">🥭</div>
+                            <div class="commodity-meta">
+                                <h4>Ratnagiri Alphonso Mango</h4>
+                                <p><i class="bi bi-geo-alt-fill text-danger"></i> Ratnagiri, Maharashtra <span class="badge bg-light text-dark border ms-1">Grade A+ Export</span></p>
+                            </div>
+                        </div>
+
+                        <div class="radar-pricing-grid">
+                            <div>
+                                <div class="price-item-label">Lot Size</div>
+                                <div class="price-item-val">500 Crates</div>
+                            </div>
+                            <div>
+                                <div class="price-item-label">Current Highest Bid</div>
+                                <div class="price-item-val highlight">₹1,250 <small style="font-size: 11px; font-weight: normal; color: var(--secondary-text);">/dozen</small></div>
+                            </div>
+                        </div>
+
+                        <div class="radar-recent-bids">
+                            <div class="recent-bid-entry">
+                                <span class="bidder-tag"><i class="bi bi-person-check-fill text-success"></i> Reliance Agri Mart</span>
+                                <span class="bid-gain">+₹50</span>
+                                <span class="bid-time">2 mins ago</span>
+                            </div>
+                        </div>
+
+                        <a href="#live-auctions" class="btn btn-hero-primary w-100 justify-content-center">
+                            <i class="bi bi-eye"></i> View All Live Auctions
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+
+<!-- ==========================================================================
+     Market Ticker Bar (Live Agritech Pulse)
+     ========================================================================== -->
+<div class="market-ticker-section">
+    <div class="ticker-track">
+        <div class="ticker-item"><i class="bi bi-activity text-warning me-1"></i> <span class="crop-label">MARKET PULSE:</span> Real-time mandi benchmark vs KrishiBid auctions</div>
+        <div class="ticker-item"><span class="crop-label">Nashik Red Onion:</span> <span class="crop-price">₹2,450/Qtl</span> <span class="crop-diff">+3.8%</span></div>
+        <div class="ticker-item"><span class="crop-label">Ratnagiri Alphonso Mango:</span> <span class="crop-price">₹1,250/Dz</span> <span class="crop-diff">+6.2%</span></div>
+        <div class="ticker-item"><span class="crop-label">Sharbati Wheat:</span> <span class="crop-price">₹2,920/Qtl</span> <span class="crop-diff">+2.1%</span></div>
+        <div class="ticker-item"><span class="crop-label">Bardoli Pineapple:</span> <span class="crop-price">₹42.00/Kg</span> <span class="crop-diff">+5.0%</span></div>
+        <div class="ticker-item"><span class="crop-label">Shimla Royal Apple:</span> <span class="crop-price">₹105.00/Kg</span> <span class="crop-diff">+3.4%</span></div>
+        <div class="ticker-item"><span class="crop-label">Surat Hybrid Tomato:</span> <span class="crop-price">₹42.50/Kg</span> <span class="crop-diff">+4.8%</span></div>
+        <div class="ticker-item"><span class="crop-label">Basmati 1121 Rice:</span> <span class="crop-price">₹4,850/Qtl</span> <span class="crop-diff">+1.5%</span></div>
+        <div class="ticker-item"><span class="crop-label">Gujarat Shankar-6 Cotton:</span> <span class="crop-price">₹7,200/Qtl</span> <span class="crop-diff">+2.7%</span></div>
+
+        <!-- Repeated for seamless loop -->
+        <div class="ticker-item"><i class="bi bi-activity text-warning me-1"></i> <span class="crop-label">MARKET PULSE:</span> Real-time mandi benchmark vs KrishiBid auctions</div>
+        <div class="ticker-item"><span class="crop-label">Nashik Red Onion:</span> <span class="crop-price">₹2,450/Qtl</span> <span class="crop-diff">+3.8%</span></div>
+        <div class="ticker-item"><span class="crop-label">Ratnagiri Alphonso Mango:</span> <span class="crop-price">₹1,250/Dz</span> <span class="crop-diff">+6.2%</span></div>
+        <div class="ticker-item"><span class="crop-label">Sharbati Wheat:</span> <span class="crop-price">₹2,920/Qtl</span> <span class="crop-diff">+2.1%</span></div>
+        <div class="ticker-item"><span class="crop-label">Bardoli Pineapple:</span> <span class="crop-price">₹42.00/Kg</span> <span class="crop-diff">+5.0%</span></div>
+        <div class="ticker-item"><span class="crop-label">Shimla Royal Apple:</span> <span class="crop-price">₹105.00/Kg</span> <span class="crop-diff">+3.4%</span></div>
+        <div class="ticker-item"><span class="crop-label">Surat Hybrid Tomato:</span> <span class="crop-price">₹42.50/Kg</span> <span class="crop-diff">+4.8%</span></div>
+    </div>
+</div>
+
+
+<!-- ==========================================================================
+     Live Auctions Showcase Section
+     ========================================================================== -->
+<section id="live-auctions" class="section-pad auctions-showcase">
+    <div class="container">
+        
+        <div class="text-center mb-5">
+            <span class="section-tag"><i class="bi bi-broadcast"></i> Live Agricultural Marketplace</span>
+            <h2 class="section-heading">Active Lots Open for Real-Time Bidding</h2>
+            <p class="section-desc">
+                Source directly from certified farmers with verifiable quality grades. 
+                Transparent countdown timers, instant outbid notifications, and safe escrow delivery.
+            </p>
+        </div>
+
+        <!-- Category Filter Pills -->
+        <div class="category-filter-nav">
+            <button class="cat-pill active" data-category="all">All Commodities</button>
+            <button class="cat-pill" data-category="vegetables">Vegetables</button>
+            <button class="cat-pill" data-category="fruits">Fruits</button>
+            <button class="cat-pill" data-category="grains">Grains & Cereals</button>
+            <button class="cat-pill" data-category="cash-crops">Cash Crops & Spices</button>
+        </div>
+
+        <!-- Auction Cards Grid -->
+        <div class="row g-4" id="auctionsContainer">
+            
+            {% if active_auctions and active_auctions|length > 0 %}
+                {% for auction in active_auctions %}
+                    {% set listing = auction.listing %}
+                    {% set crop_lower = listing.crop_name|lower %}
+                    
+                    {# Determine category classification #}
+                    {% set cat_type = 'vegetables' %}
+                    {% if 'apple' in crop_lower or 'pineapple' in crop_lower or 'mango' in crop_lower or 'banana' in crop_lower or 'orange' in crop_lower %}
+                        {% set cat_type = 'fruits' %}
+                    {% elif 'wheat' in crop_lower or 'rice' in crop_lower or 'paddy' in crop_lower or 'maize' in crop_lower or 'barley' in crop_lower %}
+                        {% set cat_type = 'grains' %}
+                    {% elif 'cotton' in crop_lower or 'chilli' in crop_lower or 'turmeric' in crop_lower %}
+                        {% set cat_type = 'cash-crops' %}
+                    {% endif %}
+
+                    <div class="col-md-6 col-lg-4 auction-filterable-item" data-category="{{ cat_type }}">
+                        <div class="auction-grid-card">
+                            
+                            <div class="auction-card-media">
+                                {# High-res photography with fallback SVG visual #}
+                                {% if 'pineapple' in crop_lower %}
+                                    <img src="https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=600&q=80" class="auction-crop-img" alt="{{ listing.crop_name }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="auction-crop-fallback" style="display:none;">🍍</div>
+                                {% elif 'tomato' in crop_lower %}
+                                    <img src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80" class="auction-crop-img" alt="{{ listing.crop_name }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="auction-crop-fallback" style="display:none;">🍅</div>
+                                {% elif 'apple' in crop_lower %}
+                                    <img src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80" class="auction-crop-img" alt="{{ listing.crop_name }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="auction-crop-fallback" style="display:none;">🍎</div>
+                                {% else %}
+                                    <div class="auction-crop-fallback">🌿</div>
+                                {% endif %}
+
+                                <span class="badge-auction-status live">
+                                    <span class="live-indicator-dot"></span> ACTIVE
+                                </span>
+
+                                <span class="badge-grade-tag">
+                                    {{ listing.quality_grade or 'Grade A' }}
+                                </span>
+
+                                <span class="badge-timer-tag live-countdown-timer" data-end="{{ auction.end_time.isoformat() if auction.end_time else '' }}">
+                                    <i class="bi bi-clock-history"></i> Live
+                                </span>
+                            </div>
+
+                            <div class="auction-card-body">
+                                <h3 class="auction-card-title">{{ listing.crop_name }}</h3>
+                                
+                                <div class="auction-card-location">
+                                    <i class="bi bi-geo-alt text-danger"></i> {{ listing.location or 'Gujarat, India' }}
+                                    <span class="mx-1">&bull;</span>
+                                    <i class="bi bi-person-check text-success"></i> {{ listing.farmer.user.name if listing.farmer and listing.farmer.user else 'Verified Farmer' }}
+                                </div>
+
+                                <div class="auction-card-specs">
+                                    <div class="spec-item">
+                                        <span>Quantity</span>
+                                        <strong>{{ listing.quantity }} {{ listing.quantity_unit }}</strong>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span>Bids Placed</span>
+                                        <strong>{{ auction.bids|length }} bids</strong>
+                                    </div>
+                                    <div class="spec-item">
+                                        <span>Harvest Date</span>
+                                        <strong>{{ listing.harvest_date.strftime('%d %b') if listing.harvest_date else 'Fresh' }}</strong>
+                                    </div>
+                                </div>
+
+                                <div class="auction-card-pricing">
+                                    <div class="price-starting">
+                                        <span>Reserve Base</span>
+                                        <strong>₹{{ "%.2f"|format(auction.starting_price) }}/{{ listing.quantity_unit }}</strong>
+                                    </div>
+                                    <div class="price-highest">
+                                        <span>Highest Bid</span>
+                                        <strong>₹{{ "%.2f"|format(auction.current_highest_bid or auction.starting_price) }}</strong>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    {% if session.get("user_id") and session.get("role") == "buyer" %}
+                                        <a href="{{ url_for('buyer.auction_details', auction_id=auction.id) }}" class="btn-card-bid flex-grow-1">
+                                            <i class="bi bi-hammer"></i> Place Bid Now
+                                        </a>
+                                    {% else %}
+                                        <a href="#" 
+                                           class="btn-card-bid flex-grow-1 btn-trigger-quickview"
+                                           data-crop="{{ listing.crop_name }}"
+                                           data-location="{{ listing.location or 'India' }}"
+                                           data-farmer="{{ listing.farmer.user.name if listing.farmer and listing.farmer.user else 'Verified Farmer' }}"
+                                           data-grade="{{ listing.quality_grade or 'Grade A' }}"
+                                           data-qty="{{ listing.quantity }} {{ listing.quantity_unit }}"
+                                           data-start="{{ auction.starting_price }}"
+                                           data-highest="{{ auction.current_highest_bid or auction.starting_price }}"
+                                           data-id="{{ auction.id }}"
+                                           data-url="{{ url_for('buyer.auction_details', auction_id=auction.id) }}">
+                                            <i class="bi bi-eye"></i> Quick View & Bid
+                                        </a>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Additional Curated Featured Lots (Ensures all category pills display rich content) -->
+            <div class="col-md-6 col-lg-4 auction-filterable-item" data-category="grains">
+                <div class="auction-grid-card">
+                    <div class="auction-card-media">
+                        <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=600&q=80" class="auction-crop-img" alt="Sharbati Wheat" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="auction-crop-fallback" style="display:none;">🌾</div>
+                        <span class="badge-auction-status live"><span class="live-indicator-dot"></span> ACTIVE</span>
+                        <span class="badge-grade-tag">Grade A+ Organic</span>
+                        <span class="badge-timer-tag"><i class="bi bi-clock-history"></i> 05h 12m</span>
+                    </div>
+                    <div class="auction-card-body">
+                        <h3 class="auction-card-title">Sharbati Gold Wheat</h3>
+                        <div class="auction-card-location">
+                            <i class="bi bi-geo-alt text-danger"></i> Sehore, Madhya Pradesh &bull; <i class="bi bi-person-check text-success"></i> Shivraj Malviya
+                        </div>
+                        <div class="auction-card-specs">
+                            <div class="spec-item"><span>Quantity</span><strong>80 Quintals</strong></div>
+                            <div class="spec-item"><span>Bids Placed</span><strong>9 bids</strong></div>
+                            <div class="spec-item"><span>Moisture</span><strong>&lt; 10% Dry</strong></div>
+                        </div>
+                        <div class="auction-card-pricing">
+                            <div class="price-starting"><span>Reserve Base</span><strong>₹2,700/Qtl</strong></div>
+                            <div class="price-highest"><span>Highest Bid</span><strong>₹2,920/Qtl</strong></div>
+                        </div>
+                        <a href="{% if session.get('role') == 'buyer' %}{{ url_for('buyer.dashboard', user_id=session.get('user_id')) }}{% else %}{{ url_for('auth.signup') }}{% endif %}" class="btn-card-bid">
+                            <i class="bi bi-hammer"></i> Bid on This Lot
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 auction-filterable-item" data-category="vegetables">
+                <div class="auction-grid-card">
+                    <div class="auction-card-media">
+                        <img src="https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=600&q=80" class="auction-crop-img" alt="Red Onion" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="auction-crop-fallback" style="display:none;">🧅</div>
+                        <span class="badge-auction-status live"><span class="live-indicator-dot"></span> ACTIVE</span>
+                        <span class="badge-grade-tag">Grade A Export</span>
+                        <span class="badge-timer-tag"><i class="bi bi-clock-history"></i> 03h 40m</span>
+                    </div>
+                    <div class="auction-card-body">
+                        <h3 class="auction-card-title">Nashik Pink-Red Onion</h3>
+                        <div class="auction-card-location">
+                            <i class="bi bi-geo-alt text-danger"></i> Lasalgaon, Nashik &bull; <i class="bi bi-person-check text-success"></i> Ramesh Patil
+                        </div>
+                        <div class="auction-card-specs">
+                            <div class="spec-item"><span>Quantity</span><strong>120 Quintals</strong></div>
+                            <div class="spec-item"><span>Bids Placed</span><strong>14 bids</strong></div>
+                            <div class="spec-item"><span>Size</span><strong>55mm+ Large</strong></div>
+                        </div>
+                        <div class="auction-card-pricing">
+                            <div class="price-starting"><span>Reserve Base</span><strong>₹2,100/Qtl</strong></div>
+                            <div class="price-highest"><span>Highest Bid</span><strong>₹2,450/Qtl</strong></div>
+                        </div>
+                        <a href="{% if session.get('role') == 'buyer' %}{{ url_for('buyer.dashboard', user_id=session.get('user_id')) }}{% else %}{{ url_for('auth.signup') }}{% endif %}" class="btn-card-bid">
+                            <i class="bi bi-hammer"></i> Bid on This Lot
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4 auction-filterable-item" data-category="cash-crops">
+                <div class="auction-grid-card">
+                    <div class="auction-card-media">
+                        <img src="https://images.unsplash.com/photo-1594489428504-5c0c480a15fd?auto=format&fit=crop&w=600&q=80" class="auction-crop-img" alt="Cotton" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="auction-crop-fallback" style="display:none;">☁️</div>
+                        <span class="badge-auction-status live"><span class="live-indicator-dot"></span> ACTIVE</span>
+                        <span class="badge-grade-tag">Long Staple Shankar-6</span>
+                        <span class="badge-timer-tag"><i class="bi bi-clock-history"></i> 08h 20m</span>
+                    </div>
+                    <div class="auction-card-body">
+                        <h3 class="auction-card-title">Pure White Shankar-6 Cotton</h3>
+                        <div class="auction-card-location">
+                            <i class="bi bi-geo-alt text-danger"></i> Rajkot, Gujarat &bull; <i class="bi bi-person-check text-success"></i> Bhavesh Solanki
+                        </div>
+                        <div class="auction-card-specs">
+                            <div class="spec-item"><span>Quantity</span><strong>65 Quintals</strong></div>
+                            <div class="spec-item"><span>Bids Placed</span><strong>11 bids</strong></div>
+                            <div class="spec-item"><span>Staple</span><strong>29mm+</strong></div>
+                        </div>
+                        <div class="auction-card-pricing">
+                            <div class="price-starting"><span>Reserve Base</span><strong>₹6,800/Qtl</strong></div>
+                            <div class="price-highest"><span>Highest Bid</span><strong>₹7,200/Qtl</strong></div>
+                        </div>
+                        <a href="{% if session.get('role') == 'buyer' %}{{ url_for('buyer.dashboard', user_id=session.get('user_id')) }}{% else %}{{ url_for('auth.signup') }}{% endif %}" class="btn-card-bid">
+                            <i class="bi bi-hammer"></i> Bid on This Lot
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ==========================================================================
+     "The Middleman Killer" — Interactive Margin Simulator
+     ========================================================================== -->
+<section id="calculator" class="section-pad middleman-section">
+    <div class="container">
+        
+        <div class="text-center mb-5">
+            <span class="section-tag"><i class="bi bi-calculator-fill"></i> "The Middleman Killer" Tool</span>
+            <h2 class="section-heading">How Much Money are Middlemen Taking from You?</h2>
+            <p class="section-desc">
+                In traditional mandis, commission agents, cartels, and unofficial cuts steal up to 35% of a farmer's income. 
+                Select your crop and quantity below to simulate your real earnings on KrishiBid.
+            </p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-xl-10">
+                <div class="calc-card-container">
+                    
+                    <!-- Crop Selection Grid -->
+                    <div class="calc-input-group">
+                        <label><i class="bi bi-flower1 text-warning me-1"></i> Choose Your Agricultural Commodity:</label>
+                        <div class="crop-select-grid">
+                            <button type="button" class="crop-btn-option active" data-crop="tomato">
+                                <span style="font-size: 20px;">🍅</span>
+                                <span>Tomato</span>
+                            </button>
+                            <button type="button" class="crop-btn-option" data-crop="onion">
+                                <span style="font-size: 20px;">🧅</span>
+                                <span>Red Onion</span>
+                            </button>
+                            <button type="button" class="crop-btn-option" data-crop="wheat">
+                                <span style="font-size: 20px;">🌾</span>
+                                <span>Wheat</span>
+                            </button>
+                            <button type="button" class="crop-btn-option" data-crop="apple">
+                                <span style="font-size: 20px;">🍎</span>
+                                <span>Apple</span>
+                            </button>
+                            <button type="button" class="crop-btn-option" data-crop="pineapple">
+                                <span style="font-size: 20px;">🍍</span>
+                                <span>Pineapple</span>
+                            </button>
+                            <button type="button" class="crop-btn-option" data-crop="cotton">
+                                <span style="font-size: 20px;">☁️</span>
+                                <span>Cotton</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quantity Slider -->
+                    <div class="qty-slider-box">
+                        <div class="qty-header">
+                            <label class="mb-0 text-white"><i class="bi bi-box-seam me-1"></i> Enter Harvest Volume:</label>
+                            <span class="qty-display-val" id="calcQtyDisplay">30 Quintals</span>
+                        </div>
+                        <input type="range" class="calc-range-slider" id="calcQtySlider" min="5" max="200" step="5" value="30">
+                        <div class="d-flex justify-content-between text-white-50 mt-1" style="font-size: 11px;">
+                            <span>Small Farmer Lot (5 Qtl)</span>
+                            <span>Medium Harvest (100 Qtl)</span>
+                            <span>Bulk Farm Lot (200 Qtl)</span>
+                        </div>
+                    </div>
+
+                    <!-- Side-by-Side Comparison Box -->
+                    <div class="comparison-box">
+                        
+                        <!-- Traditional Mandi / Middleman Route -->
+                        <div class="comp-col mandi">
+                            <div class="comp-title">
+                                <i class="bi bi-x-circle-fill"></i> Traditional APMC / Middleman Route
+                            </div>
+                            <ul class="comp-list">
+                                <li>
+                                    <span>Middlemen Brokerage (10-15%)</span>
+                                    <strong class="text-danger" id="mandiBrokerFee">- ₹16,800</strong>
+                                </li>
+                                <li>
+                                    <span>Unofficial Bagging & Cuts (6%)</span>
+                                    <strong class="text-danger" id="mandiOtherDeductions">- ₹25,200</strong>
+                                </li>
+                                <li>
+                                    <span>Payment Default Risk</span>
+                                    <span class="text-danger">High (Credit notes, 30-60 day delays)</span>
+                                </li>
+                                <li>
+                                    <span>Competitive Bids</span>
+                                    <span class="text-muted">None (Cartel pricing)</span>
+                                </li>
+                            </ul>
+                            <div class="comp-total-line">
+                                <span>Net Farmer Payout:</span>
+                                <strong class="text-white-50" id="mandiNetPayout">₹78,000</strong>
+                            </div>
+                        </div>
+
+                        <!-- KrishiBid Direct Digital Auction -->
+                        <div class="comp-col krishibid">
+                            <div class="comp-title">
+                                <i class="bi bi-check-circle-fill"></i> KrishiBid Direct Auction
+                            </div>
+                            <ul class="comp-list">
+                                <li>
+                                    <span>Middleman Commission</span>
+                                    <strong class="text-success">₹0.00 (Zero Brokers)</strong>
+                                </li>
+                                <li>
+                                    <span>Open Bidding Price Surge (+15-20%)</span>
+                                    <strong class="text-success" id="krishiBiddingSurge">+ ₹24,000</strong>
+                                </li>
+                                <li>
+                                    <span>Payment Security</span>
+                                    <span class="text-success">100% Escrow Protected</span>
+                                </li>
+                                <li>
+                                    <span>Escrow Platform Fee (1.5%)</span>
+                                    <span class="text-white-50" id="krishiEscrowFee">- ₹2,160</span>
+                                </li>
+                            </ul>
+                            <div class="comp-total-line">
+                                <span>Net Farmer Payout:</span>
+                                <strong class="text-success" id="krishiNetPayout">₹1,41,840</strong>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Grand Profit Callout Banner -->
+                    <div class="grand-profit-callout">
+                        <span class="profit-badge" id="calcGainPercent">+38.5% More Income</span>
+                        <div class="extra-money-num" id="calcExtraEarnings">+ ₹63,840</div>
+                        <div class="text-white fw-bold mb-3">Directly deposited into the farmer's verified bank account!</div>
+                        <a href="{{ url_for('auth.signup') }}" class="btn btn-cta-gold">
+                            <i class="bi bi-cash-stack"></i> Put Your Crop on Live Auction Today
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ==========================================================================
+     Dual Journey: How KrishiBid Works
+     ========================================================================== -->
+<section id="how-it-works" class="section-pad how-it-works-section">
+    <div class="container">
+        
+        <div class="text-center mb-5">
+            <span class="section-tag"><i class="bi bi-signpost-split"></i> Transparent Dual Flow</span>
+            <h2 class="section-heading">How KrishiBid Empowers Agricultural Trade</h2>
+            <p class="section-desc">
+                Whether you are a grower looking to auction your harvest at top market rates, or an institutional buyer 
+                procuring raw agricultural commodities directly, the workflow is friction-free.
+            </p>
+        </div>
+
+        <!-- Tab Controls -->
+        <div class="journey-tab-nav">
+            <button type="button" class="btn-tab-journey active" id="tabBtnFarmer">
+                <i class="bi bi-person-badge-fill"></i> For Farmers (Selling Harvest)
+            </button>
+            <button type="button" class="btn-tab-journey" id="tabBtnBuyer">
+                <i class="bi bi-cart-check-fill"></i> For Wholesale Buyers (Bidding)
+            </button>
+        </div>
+
+        <!-- Farmer Journey (4 Steps) -->
+        <div class="row g-4" id="journeyStepsFarmer">
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <span class="step-number">01</span>
+                    <div class="step-icon-wrap"><i class="bi bi-camera-fill"></i></div>
+                    <h4 class="step-title">List Harvest in 2 Mins</h4>
+                    <p class="step-text">Snap photos of your crop, specify quantity in kilograms or quintals, and enter harvest location.</p>
+                    <span class="step-tag-pill">Vernacular / Voice Ready</span>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <span class="step-number">02</span>
+                    <div class="step-icon-wrap"><i class="bi bi-graph-up-arrow"></i></div>
+                    <h4 class="step-title">Set Base Reserve Price</h4>
+                    <p class="step-text">Use KrishiBid's AI Price Intelligence to benchmark against regional APMC mandi rates so you never undersell.</p>
+                    <span class="step-tag-pill">Price Protection</span>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <span class="step-number">03</span>
+                    <div class="step-icon-wrap"><i class="bi bi-lightning-charge-fill"></i></div>
+                    <h4 class="step-title">Watch Live Competitive Bids</h4>
+                    <p class="step-text">Verified buyers nationwide submit counter-bids before the countdown expires. You see every offer in real-time.</p>
+                    <span class="step-tag-pill">Fair Competition</span>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <span class="step-number">04</span>
+                    <div class="step-icon-wrap"><i class="bi bi-wallet2"></i></div>
+                    <h4 class="step-title">Accept & Instant Escrow Pay</h4>
+                    <p class="step-text">Accept the winning offer. Buyer's payment is secured in digital escrow and instantly released on pickup.</p>
+                    <span class="step-tag-pill">Guaranteed Settlement</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buyer Journey (4 Steps) -->
+        <div class="row g-4 d-none" id="journeyStepsBuyer">
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <span class="step-number">01</span>
+                    <div class="step-icon-wrap"><i class="bi bi-search"></i></div>
+                    <h4 class="step-title">Browse Farm-Direct Lots</h4>
+                    <p class="step-text">Filter active crop auctions by state, harvest freshness, certified grade, and required lot volume.</p>
+                    <span class="step-tag-pill">Direct Sourcing</span>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <span class="step-number">02</span>
+                    <div class="step-icon-wrap"><i class="bi bi-clipboard2-check-fill"></i></div>
+                    <h4 class="step-title">Inspect Quality & Origin</h4>
+                    <p class="step-text">Review standardized photos, moisture parameters, farmer trust rating, and origin coordinates before bidding.</p>
+                    <span class="step-tag-pill">Standardized Grading</span>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <span class="step-number">03</span>
+                    <div class="step-icon-wrap"><i class="bi bi-hammer"></i></div>
+                    <h4 class="step-title">Place Competitive Bids</h4>
+                    <p class="step-text">Compete in live countdown auctions with automated proxy bidding and instant outbid alert notifications.</p>
+                    <span class="step-tag-pill">Real-Time Engine</span>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="step-card">
+                    <span class="step-number">04</span>
+                    <div class="step-icon-wrap"><i class="bi bi-truck-front-fill"></i></div>
+                    <h4 class="step-title">Secure Delivery & Dispatch</h4>
+                    <p class="step-text">Funds remain in escrow until you inspect the dispatch. Integrated logistics options deliver right to your mill or hub.</p>
+                    <span class="step-tag-pill">Zero Counterparty Risk</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ==========================================================================
+     Why KrishiBid: Core Strategic Pillars
+     ========================================================================== -->
+<section id="features" class="section-pad features-section">
+    <div class="container">
+        
+        <div class="text-center mb-5">
+            <span class="section-tag"><i class="bi bi-stars"></i> Platform Pillars</span>
+            <h2 class="section-heading">Why KrishiBid Outperforms Traditional Mandis</h2>
+            <p class="section-desc">
+                Engineered from the ground up to solve the deeply entrenched inefficiencies of India's agricultural supply chain.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-grid-card">
+                    <div class="feature-icon-box"><i class="bi bi-shield-x"></i></div>
+                    <h3 class="feature-title">Zero Broker Collusion</h3>
+                    <p class="feature-text">Eliminates secret hand signals and under-the-cloth cartel bidding. Open bids ensure farmers receive genuine market value.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-grid-card">
+                    <div class="feature-icon-box"><i class="bi bi-safe-fill"></i></div>
+                    <h3 class="feature-title">Escrow Safe Settlement</h3>
+                    <p class="feature-text">Buyer payment is locked into digital escrow before produce moves, protecting farmers against delayed or dishonored payments.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-grid-card">
+                    <div class="feature-icon-box"><i class="bi bi-cpu-fill"></i></div>
+                    <h3 class="feature-title">AI Quality Assessment</h3>
+                    <p class="feature-text">Standardized quality grading criteria ensure buyers get the exact produce grade they bid for, reducing rejection disputes.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-grid-card">
+                    <div class="feature-icon-box"><i class="bi bi-stopwatch-fill"></i></div>
+                    <h3 class="feature-title">Real-Time Auction Engine</h3>
+                    <p class="feature-text">High-speed live auction rooms with real-time countdown timers, instant highest-bid updates, and transparent bid histories.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-grid-card">
+                    <div class="feature-icon-box"><i class="bi bi-person-vcard-fill"></i></div>
+                    <h3 class="feature-title">Verified Trust Scores</h3>
+                    <p class="feature-text">KYC verification, historical delivery ratings, and buyer reviews build an authentic community of trustworthy agricultural trade partners.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-grid-card">
+                    <div class="feature-icon-box"><i class="bi bi-box-truck"></i></div>
+                    <h3 class="feature-title">Farm-Gate Logistics Link</h3>
+                    <p class="feature-text">Aggregated shipment coordination ensures produce is collected directly from the farmer's gate, minimizing post-harvest transit losses.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ==========================================================================
+     Inclusion & Sustainability Pillar (IEEE WIE ILS 2026 Core Theme)
+     ========================================================================== -->
+<section class="section-pad inclusion-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            
+            <div class="col-lg-6">
+                <span class="section-tag" style="background: rgba(244, 185, 66, 0.25); color: #92400e;">
+                    <i class="bi bi-globe-americas"></i> Inclusive & Sustainable Agriculture
+                </span>
+                <h2 class="section-heading mt-2">Built for Every Indian Farmer, Irrespective of Tech Literacy</h2>
+                <p class="section-desc ms-0 mb-4">
+                    Aligned with the IEEE WIE ILS 2026 Hackathon vision of <em>"Thriving Together for an Inclusive and Sustainable Future"</em>, 
+                    KrishiBid breaks down traditional digital barriers.
+                </p>
+
+                <div class="inclusion-card">
+                    <div class="inclusion-icon"><i class="bi bi-mic-fill"></i></div>
+                    <div class="inclusion-text">
+                        <h5>Voice-Assisted & Vernacular Interfaces</h5>
+                        <p>Farmers can list their produce or check auction bids simply by speaking in their regional language, ensuring digital inclusion for smallholders.</p>
+                    </div>
+                </div>
+
+                <div class="inclusion-card">
+                    <div class="inclusion-icon"><i class="bi bi-recycle"></i></div>
+                    <div class="inclusion-text">
+                        <h5>22% Reduction in Post-Harvest Spoilage</h5>
+                        <p>By shortening the time between harvest and sale to under 24-48 hours, KrishiBid drastically cuts food wastage and carbon footprints across the supply chain.</p>
+                    </div>
+                </div>
+
+                <div class="inclusion-card">
+                    <div class="inclusion-icon"><i class="bi bi-bank2"></i></div>
+                    <div class="inclusion-text">
+                        <h5>Digital Creditworthiness Records</h5>
+                        <p>Every transparent transaction builds a verified digital financial footprint, helping small farmers secure formal bank credit and low-interest crop loans.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-6">
+                <div class="p-4 p-md-5 rounded-4 bg-white border shadow-sm">
+                    <h4 class="fw-bold mb-3" style="font-family: 'League Spartan', sans-serif; font-size: 26px; color: var(--primary);">
+                        Our 12-Month Pilot Commitment
+                    </h4>
+                    <p class="text-muted" style="font-size: 14.5px;">
+                        As presented in our hackathon technical roadmap, our target is to transform regional rural economies:
+                    </p>
+
+                    <div class="d-flex align-items-center gap-3 p-3 mb-3 bg-light rounded-3">
+                        <div class="fs-2 text-success"><i class="bi bi-people-fill"></i></div>
+                        <div>
+                            <div class="fw-bold text-dark">500+ Smallholder Farmers Onboarded</div>
+                            <div class="text-muted small">Direct onboarding across agricultural clusters in Gujarat & Maharashtra.</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3 p-3 mb-3 bg-light rounded-3">
+                        <div class="fs-2 text-warning"><i class="bi bi-building-check"></i></div>
+                        <div>
+                            <div class="fw-bold text-dark">50+ Verified Institutional Buyers</div>
+                            <div class="text-muted small">FPOs, retail chains, food processing units, and licensed bulk traders.</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3">
+                        <div class="fs-2 text-primary"><i class="bi bi-cash-coin"></i></div>
+                        <div>
+                            <div class="fw-bold text-dark">1,000+ Completed Auction Lots</div>
+                            <div class="text-muted small">Targeting an average of 5+ competitive bids per active auction listing.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ==========================================================================
+     Impact Stats Section
+     ========================================================================== -->
+<section class="impact-section">
+    <div class="container">
+        <div class="row g-4">
+            
+            <div class="col-6 col-lg-3">
+                <div class="impact-stat-item">
+                    <div class="stat-metric-num">34.8%</div>
+                    <div class="stat-metric-label">Average Farmer Profit Surge</div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="impact-stat-item">
+                    <div class="stat-metric-num">₹4.8 Cr+</div>
+                    <div class="stat-metric-label">Direct Crop Value Traded</div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="impact-stat-item">
+                    <div class="stat-metric-num">12,500+</div>
+                    <div class="stat-metric-label">Quintals of Produce Auctioned</div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="impact-stat-item">
+                    <div class="stat-metric-num">99.4%</div>
+                    <div class="stat-metric-label">Escrow Settlement Success</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ==========================================================================
+     Testimonials / Community Voices
+     ========================================================================== -->
+<section class="section-pad testimonials-section">
+    <div class="container">
+        
+        <div class="text-center mb-5">
+            <span class="section-tag"><i class="bi bi-chat-quote-fill"></i> Verified Testimonials</span>
+            <h2 class="section-heading">Trusted by Farmers & Wholesale Buyers</h2>
+            <p class="section-desc">
+                Hear directly from the people whose livelihoods are being transformed by fair digital market access.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="stars-rating">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="testimonial-quote">
+                        "For the first time in 15 years of grape farming, I did not have to beg middlemen for fair prices. 
+                        Buyers from Pune and Mumbai competed live on KrishiBid. I earned ₹75,000 more on 40 quintals than my local mandi rate!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">RP</div>
+                        <div class="author-info">
+                            <h6>Ramesh Patil</h6>
+                            <p>Grape & Onion Farmer, Nashik (MH)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="stars-rating">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="testimonial-quote">
+                        "As a food processing firm, our biggest headache was unpredictable quality and 3 layers of sub-brokers. 
+                        With KrishiBid, we inspect verified farm lots and bid directly. Our procurement cycle dropped from 5 days to 24 hours."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">PS</div>
+                        <div class="author-info">
+                            <h6>Priya Sharma</h6>
+                            <p>Head of Procurement, SunAgro Foods</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div class="stars-rating">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="testimonial-quote">
+                        "The escrow payment guarantee gives me complete peace of mind. In the old system, commission agents gave handwritten chits and 
+                        delayed payments for months. Here, the money is safely in my bank the moment produce is picked up."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">GS</div>
+                        <div class="author-info">
+                            <h6>Gurpreet Singh</h6>
+                            <p>Wheat & Paddy Grower, Punjab</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ==========================================================================
+     Frequently Asked Questions (Accordion)
+     ========================================================================== -->
+<section class="section-pad faq-section">
+    <div class="container">
+        
+        <div class="text-center mb-5">
+            <span class="section-tag"><i class="bi bi-question-circle-fill"></i> Got Questions?</span>
+            <h2 class="section-heading">Frequently Asked Questions</h2>
+            <p class="section-desc">
+                Everything you need to know about participating in KrishiBid auctions, payment protection, and quality guarantees.
+            </p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="accordion krishi-accordion" id="krishiFaqAccordion">
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                How does KrishiBid eliminate middlemen commissions?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#krishiFaqAccordion">
+                            <div class="accordion-body">
+                                In traditional mandis, farmers are forced to sell through licensed commission agents (adhtiyas) who take cuts from both sides and often fix prices. On KrishiBid, farmers list directly on the digital marketplace. Verified wholesale buyers compete in open, transparent countdown auctions. There are zero broker cuts, giving farmers up to 35% higher real earnings.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                How does the Escrow Payment Guarantee work?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#krishiFaqAccordion">
+                            <div class="accordion-body">
+                                When a buyer's bid wins the auction, their funds are immediately deposited into a secure digital escrow account before produce is dispatched. Once the produce is collected from the farm gate or delivered to the buyer's depot and verified, escrow automatically releases the payment directly to the farmer's bank account. This eliminates payment defaults completely.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Can smallholder farmers with less than 2 acres join?
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#krishiFaqAccordion">
+                            <div class="accordion-body">
+                                Absolutely! KrishiBid is specifically built for small and fragmented farmers. You can list lots starting as low as 10-20 kilograms or combine harvests with neighboring farmers through Farmer Producer Organizations (FPOs) for bulk auction lots.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                How is produce quality verified before buyers place bids?
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#krishiFaqAccordion">
+                            <div class="accordion-body">
+                                Listings include multi-angle photographs, harvest dates, moisture and size parameters, and standardized quality grades (e.g. Grade A, Export, Organic). In addition, each farmer possesses a verified trust score based on previous successful deliveries and buyer satisfaction ratings.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFive">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                What fees are charged on the platform?
+                            </button>
+                        </h2>
+                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#krishiFaqAccordion">
+                            <div class="accordion-body">
+                                Unlike traditional intermediaries who deduct 12% to 20% in arbitrary fees, KrishiBid charges zero commission to farmers. A nominal platform maintenance and escrow security fee (1.5%) is applied only upon successful transaction settlement, ensuring our interests are 100% aligned with your success.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ==========================================================================
+     Dual Call-to-Action Conversion Banner
+     ========================================================================== -->
+<section class="cta-banner-section">
+    <div class="container">
+        <div class="row g-4">
+            
+            <div class="col-md-6">
+                <div class="cta-box-card">
+                    <div>
+                        <span class="badge bg-warning text-dark fw-bold mb-3 px-3 py-2 rounded-pill">FOR FARMERS & GROWERS</span>
+                        <h3>Stop Selling at Lowball Distress Rates.</h3>
+                        <p>
+                            Get competitive live bids from buyers across the nation. Put your next harvest on auction in less than 2 minutes with guaranteed escrow payment protection.
+                        </p>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('auth.signup') }}" class="btn-cta-gold">
+                            <i class="bi bi-person-plus-fill"></i> Register as a Farmer Free
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="cta-box-card">
+                    <div>
+                        <span class="badge bg-success-subtle text-white fw-bold mb-3 px-3 py-2 rounded-pill border">FOR BUYERS & AGRI-PROCESSORS</span>
+                        <h3>Source Fresh Produce Direct from Orchards & Farms.</h3>
+                        <p>
+                            Eliminate multiple layers of commission agents. Access standardized quality lots, participate in transparent countdown auctions, and track farm dispatches.
+                        </p>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('auth.signup') }}" class="btn-cta-white">
+                            <i class="bi bi-briefcase-fill"></i> Register as a Verified Buyer
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ==========================================================================
+     Comprehensive Agritech Footer
+     ========================================================================== -->
+<footer class="krishi-footer">
+    <div class="container">
+        <div class="row g-4">
+            
+            <div class="col-lg-4 footer-brand">
+                <a href="{{ url_for('home') }}" class="d-inline-flex align-items-center gap-2 text-decoration-none">
+                    <img src="{{ url_for('static', filename='images/logo-only.svg') }}" width="42" height="42" alt="KrishiBid Logo">
+                    <img src="{{ url_for('static', filename='images/logo-text-only.svg') }}" height="26" alt="KrishiBid">
+                </a>
+                <p>
+                    KrishiBid is India's next-generation digital agricultural exchange, eliminating predatory middlemen and building an inclusive, transparent, and sustainable future for farmers and wholesale food buyers.
+                </p>
+                <div class="d-flex gap-3 fs-5 mt-3 text-secondary">
+                    <a href="#" class="text-secondary"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="text-secondary"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="text-secondary"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-secondary"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-2">
+                <h5 class="footer-heading">Marketplace</h5>
+                <ul class="footer-links">
+                    <li><a href="#live-auctions">Live Auctions</a></li>
+                    <li><a href="#live-auctions">Commodities</a></li>
+                    <li><a href="#calculator">Profit Calculator</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#features">Platform Security</a></li>
+                </ul>
+            </div>
+
+            <div class="col-6 col-lg-2">
+                <h5 class="footer-heading">User Portals</h5>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('auth.login') }}">Farmer Login</a></li>
+                    <li><a href="{{ url_for('auth.signup') }}">Farmer Registration</a></li>
+                    <li><a href="{{ url_for('auth.login') }}">Buyer Login</a></li>
+                    <li><a href="{{ url_for('auth.signup') }}">Wholesale Onboarding</a></li>
+                    <li><a href="{{ url_for('admin.dashboard') }}">Admin Gateway</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-4">
+                <h5 class="footer-heading">Hackathon Recognition</h5>
+                <div class="hackathon-credit-card">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-trophy-fill text-warning fs-5"></i>
+                        <strong>IEEE WIE ILS 2026 National Hackathon</strong>
+                    </div>
+                    <p class="mb-1 text-white-50" style="font-size: 12.5px;">
+                        Theme: <em>Empower to Inspire — Thriving Together for an Inclusive and Sustainable Future</em>
+                    </p>
+                    <p class="mb-0 text-white-50" style="font-size: 12.5px;">
+                        Project: <strong>THE MIDDLEMAN KILLER (KrishiBid)</strong> by <strong>Team Runtime riders</strong>.
+                    </p>
+                </div>
+                <div class="mt-3 text-secondary small">
+                    <i class="bi bi-shield-check text-success"></i> 256-Bit SSL Encrypted Escrow Architecture.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom-bar">
+            <div>&copy; 2026 KrishiBid Agritech Platform. Built with pride by Team Runtime riders. All rights reserved.</div>
+            <div class="d-flex gap-3">
+                <a href="#" class="text-secondary text-decoration-none">Terms of Service</a>
+                <a href="#" class="text-secondary text-decoration-none">Privacy Policy</a>
+                <a href="#" class="text-secondary text-decoration-none">Escrow Guidelines</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<!-- ==========================================================================
+     Interactive Quick-View Auction Modal
+     ========================================================================== -->
+<div class="modal fade quick-view-modal" id="auctionQuickViewModal" tabindex="-1" aria-labelledby="auctionQuickViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <div>
+                    <span class="badge bg-success-subtle text-success border mb-1">
+                        <span class="live-indicator-dot me-1"></span> Live Auction
+                    </span>
+                    <h5 class="modal-title" id="modalCropName">Crop Name</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                    <div>
+                        <span class="text-muted small d-block">Origin & Farmer</span>
+                        <strong id="modalLocation">Location</strong>
+                        <div class="text-success small"><i class="bi bi-person-check-fill"></i> <span id="modalFarmer">Farmer</span></div>
+                    </div>
+                    <div class="text-end">
+                        <span class="text-muted small d-block">Quality Grade</span>
+                        <span class="badge bg-warning text-dark fs-6" id="modalGrade">Grade A</span>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <span class="text-muted small d-block">Available Lot</span>
+                            <strong class="fs-5" id="modalQty">50 Qtl</strong>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <span class="text-muted small d-block">Base Price</span>
+                            <strong class="fs-5 text-secondary" id="modalStartPrice">₹0.00</strong>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="p-3 bg-success-subtle border border-success-subtle rounded-3 text-center">
+                            <span class="text-success fw-bold small d-block text-uppercase">Current Highest Bid</span>
+                            <strong class="fs-2 text-success" id="modalCurrentBid">₹0.00</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info py-2 small mb-4">
+                    <i class="bi bi-info-circle-fill me-1"></i> Bidding requires an active, verified buyer account with escrow clearance.
+                </div>
+
+                <div class="d-grid gap-2">
+                    {% if session.get("user_id") and session.get("role") == "buyer" %}
+                        <a href="#" class="btn btn-hero-primary justify-content-center" id="modalActionBtn">
+                            <i class="bi bi-hammer"></i> Proceed to Live Auction Room
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-hero-primary justify-content-center">
+                            <i class="bi bi-box-arrow-in-right"></i> Log In to Submit Your Bid
+                        </a>
+                        <a href="{{ url_for('auth.signup') }}" class="btn btn-outline-secondary justify-content-center">
+                            New Buyer? Sign Up Free
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock body %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
+{% endblock script %}

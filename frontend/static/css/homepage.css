@@ -1,0 +1,1610 @@
+/* ==========================================================================
+   KrishiBid - Impressive Homepage Stylesheet
+   Designed for IEEE WIE ILS 2026 National Hackathon | Team Runtime riders
+   ========================================================================== */
+
+/* ---------- Desktop Navbar Customizations ---------- */
+.krishi-desktop-nav {
+    margin-left: 2rem;
+}
+
+.krishi-desktop-nav .nav-item-link {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    position: relative;
+    padding: 6px 2px;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.krishi-desktop-nav .nav-item-link:hover {
+    color: var(--primary);
+}
+
+.krishi-desktop-nav .nav-item-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--primary-light);
+    border-radius: 2px;
+    transition: width 0.25s ease;
+}
+
+.krishi-desktop-nav .nav-item-link:hover::after {
+    width: 100%;
+}
+
+.live-indicator-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    animation: live-pulse 1.8s infinite;
+}
+
+@keyframes live-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 7px rgba(34, 197, 94, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
+
+.btn-nav-outline {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+    background: transparent;
+    border: 1.5px solid var(--primary);
+    border-radius: 10px;
+    padding: 7px 16px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-nav-outline:hover {
+    background: rgba(20, 83, 45, 0.08);
+    color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.btn-nav-primary {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff !important;
+    background: var(--primary);
+    border: 1.5px solid var(--primary);
+    border-radius: 10px;
+    padding: 7px 18px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 14px rgba(20, 83, 45, 0.2);
+}
+
+.btn-nav-primary:hover {
+    background: #1e703d;
+    border-color: #1e703d;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(20, 83, 45, 0.3);
+}
+
+.user-pill-tag {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    background: #f1f5f2;
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.hero-wrapper {
+    position: relative;
+    background: linear-gradient(170deg, #f7fbf8 0%, #fffef7 50%, #f4f8f5 100%);
+    overflow: hidden;
+    padding: 70px 0 60px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.hero-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -150px;
+    right: -100px;
+    width: 650px;
+    height: 650px;
+    background: radial-gradient(circle, rgba(34, 197, 94, 0.12) 0%, rgba(244, 185, 66, 0.08) 50%, rgba(255, 255, 255, 0) 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.hero-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    left: -100px;
+    width: 550px;
+    height: 550px;
+    background: radial-gradient(circle, rgba(20, 83, 45, 0.08) 0%, rgba(34, 197, 94, 0.05) 50%, rgba(255, 255, 255, 0) 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.hackathon-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: rgba(20, 83, 45, 0.07);
+    border: 1px solid rgba(20, 83, 45, 0.2);
+    border-radius: 50px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 20px;
+    letter-spacing: 0.3px;
+}
+
+.hackathon-badge .tag-star {
+    color: var(--accent);
+}
+
+.hero-title {
+    font-family: "League Spartan", sans-serif;
+    font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1.12;
+    color: var(--text);
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+.hero-title .text-gradient-emerald {
+    background: linear-gradient(135deg, #14532D 20%, #22C55E 70%, #F4B942 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.hero-subtext {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.12rem;
+    line-height: 1.65;
+    color: var(--secondary-text);
+    margin-bottom: 30px;
+    max-width: 580px;
+}
+
+.hero-cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 36px;
+}
+
+.btn-hero-primary {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff !important;
+    background: var(--primary);
+    border: 2px solid var(--primary);
+    padding: 13px 26px;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.25s ease;
+    box-shadow: 0 10px 24px rgba(20, 83, 45, 0.25);
+}
+
+.btn-hero-primary:hover {
+    background: #1a6337;
+    border-color: #1a6337;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(20, 83, 45, 0.35);
+}
+
+.btn-hero-secondary {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary);
+    background: #ffffff;
+    border: 2px solid var(--border);
+    padding: 13px 24px;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.btn-hero-secondary:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(20, 83, 45, 0.12);
+}
+
+.btn-hero-calc {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--secondary-text);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease;
+}
+
+.btn-hero-calc:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.hero-trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--border);
+}
+
+.hero-trust-item {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--secondary-text);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.hero-trust-item i {
+    color: var(--success);
+    font-size: 16px;
+}
+
+/* ---------- Hero Interactive Live Radar Card ---------- */
+.hero-radar-card {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(226, 232, 227, 0.9);
+    border-radius: 24px;
+    padding: 26px;
+    box-shadow: 0 20px 45px rgba(20, 83, 45, 0.12), 0 1px 3px rgba(0,0,0,0.05);
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+.hero-radar-card:hover {
+    transform: translateY(-3px);
+}
+
+.radar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+.live-radar-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #15803d;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 50px;
+    letter-spacing: 0.5px;
+}
+
+.live-countdown-badge {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #b45309;
+    background: rgba(244, 185, 66, 0.18);
+    border: 1px solid rgba(244, 185, 66, 0.35);
+    padding: 5px 12px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.radar-commodity {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.commodity-thumb {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    object-fit: cover;
+    background: #eef5f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.commodity-meta h4 {
+    font-family: "League Spartan", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 4px 0;
+}
+
+.commodity-meta p {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    color: var(--secondary-text);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.radar-pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: #f8faf8;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+}
+
+.price-item-label {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    color: var(--secondary-text);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+}
+
+.price-item-val {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.price-item-val.highlight {
+    color: var(--success);
+}
+
+.radar-recent-bids {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 18px;
+}
+
+.recent-bid-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12.5px;
+    padding: 5px 0;
+}
+
+.recent-bid-entry:not(:last-child) {
+    border-bottom: 1px solid #f1f5f2;
+}
+
+.bidder-tag {
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.bid-time {
+    color: var(--secondary-text);
+    font-size: 11px;
+}
+
+.bid-gain {
+    font-weight: 700;
+    color: var(--success);
+}
+
+/* ==========================================================================
+   Live Market Pulse Ticker
+   ========================================================================== */
+.market-ticker-section {
+    background: #14532D;
+    padding: 12px 0;
+    overflow: hidden;
+    position: relative;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker-slide 34s linear infinite;
+}
+
+.ticker-track:hover {
+    animation-play-state: paused;
+}
+
+@keyframes ticker-slide {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 28px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13.5px;
+    color: #ffffff;
+    white-space: nowrap;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.ticker-item .crop-label {
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.ticker-item .crop-price {
+    font-weight: 600;
+    color: #f1f5f2;
+}
+
+.ticker-item .crop-diff {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(34, 197, 94, 0.25);
+    color: #4ade80;
+}
+
+/* ==========================================================================
+   Section Headers & Common Layout
+   ========================================================================== */
+.section-pad {
+    padding: 85px 0;
+}
+
+.section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(20, 83, 45, 0.08);
+    color: var(--primary);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.section-heading {
+    font-family: "League Spartan", sans-serif;
+    font-size: clamp(2rem, 3.2vw, 2.7rem);
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 14px;
+    letter-spacing: -0.3px;
+}
+
+.section-desc {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.05rem;
+    color: var(--secondary-text);
+    max-width: 650px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   Live Auctions Showcase Section
+   ========================================================================== */
+.auctions-showcase {
+    background: #ffffff;
+}
+
+.category-filter-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+
+.cat-pill {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--secondary-text);
+    background: #f8faf8;
+    border: 1px solid var(--border);
+    padding: 8px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.cat-pill:hover,
+.cat-pill.active {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(20, 83, 45, 0.15);
+}
+
+.auction-grid-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    position: relative;
+}
+
+.auction-grid-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 36px rgba(20, 83, 45, 0.12);
+    border-color: rgba(34, 197, 94, 0.4);
+}
+
+.auction-card-media {
+    position: relative;
+    height: 180px;
+    background: linear-gradient(135deg, #eaf3ed 0%, #fdf8eb 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.auction-crop-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.auction-grid-card:hover .auction-crop-img {
+    transform: scale(1.05);
+}
+
+.auction-crop-fallback {
+    font-size: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge-auction-status {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(20, 83, 45, 0.85);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.4px;
+}
+
+.badge-auction-status.live {
+    background: rgba(22, 163, 74, 0.9);
+}
+
+.badge-timer-tag {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(23, 33, 27, 0.82);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.badge-grade-tag {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: var(--accent);
+    color: #17211B;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 50px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auction-card-body {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.auction-card-title {
+    font-family: "League Spartan", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.auction-card-location {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13px;
+    color: var(--secondary-text);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.auction-card-specs {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 14px;
+    background: #f7fbf8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 18px;
+}
+
+.spec-item {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+}
+
+.spec-item span {
+    display: block;
+    color: var(--secondary-text);
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+.spec-item strong {
+    color: var(--text);
+    font-size: 14px;
+}
+
+.auction-card-pricing {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.price-starting {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    color: var(--secondary-text);
+}
+
+.price-starting strong {
+    display: block;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.price-highest {
+    text-align: right;
+    font-family: "Space Grotesk", sans-serif;
+}
+
+.price-highest span {
+    font-size: 12px;
+    color: var(--primary-light);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.price-highest strong {
+    display: block;
+    font-size: 22px;
+    color: var(--primary);
+    font-weight: 800;
+}
+
+.btn-card-bid {
+    width: 100%;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #ffffff;
+    background: var(--primary);
+    border: none;
+    padding: 11px;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-card-bid:hover {
+    background: #1a6337;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(20, 83, 45, 0.25);
+}
+
+/* ==========================================================================
+   "The Middleman Killer" Interactive Margin Calculator
+   ========================================================================== */
+.middleman-section {
+    background: #14532D;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+}
+
+.middleman-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.18) 0%, transparent 60%),
+                radial-gradient(circle at 10% 80%, rgba(244, 185, 66, 0.12) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.middleman-section .section-tag {
+    background: rgba(244, 185, 66, 0.2);
+    color: var(--accent);
+    border: 1px solid rgba(244, 185, 66, 0.3);
+}
+
+.middleman-section .section-heading {
+    color: #ffffff;
+}
+
+.middleman-section .section-desc {
+    color: #cbd5e1;
+}
+
+.calc-card-container {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 28px;
+    padding: 38px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+.calc-input-group label {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.crop-select-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.crop-btn-option {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 10px;
+    color: #ffffff;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.crop-btn-option:hover,
+.crop-btn-option.active {
+    background: var(--accent);
+    color: #17211B;
+    border-color: var(--accent);
+    font-weight: 700;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(244, 185, 66, 0.3);
+}
+
+.qty-slider-box {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+}
+
+.qty-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.qty-display-val {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+}
+
+.calc-range-slider {
+    width: 100%;
+    accent-color: var(--accent);
+    height: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comparison-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 26px;
+}
+
+@media (max-width: 768px) {
+    .comparison-box {
+        grid-template-columns: 1fr;
+    }
+}
+
+.comp-col {
+    border-radius: 18px;
+    padding: 22px;
+    font-family: "Space Grotesk", sans-serif;
+}
+
+.comp-col.mandi {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.comp-col.krishibid {
+    background: rgba(34, 197, 94, 0.14);
+    border: 1.5px solid rgba(34, 197, 94, 0.45);
+    box-shadow: 0 10px 30px rgba(34, 197, 94, 0.1);
+}
+
+.comp-title {
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.comp-col.mandi .comp-title {
+    color: #fca5a5;
+}
+
+.comp-col.krishibid .comp-title {
+    color: #86efac;
+}
+
+.comp-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px 0;
+    font-size: 13.5px;
+}
+
+.comp-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.comp-total-line {
+    padding-top: 12px;
+    border-top: 1.5px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.comp-total-line span {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #cbd5e1;
+}
+
+.comp-total-line strong {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.grand-profit-callout {
+    background: linear-gradient(135deg, rgba(244, 185, 66, 0.2) 0%, rgba(34, 197, 94, 0.25) 100%);
+    border: 1.5px solid var(--accent);
+    border-radius: 18px;
+    padding: 22px;
+    text-align: center;
+    font-family: "Space Grotesk", sans-serif;
+}
+
+.profit-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #17211B;
+    font-weight: 800;
+    font-size: 12.5px;
+    padding: 4px 14px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.extra-money-num {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 900;
+    color: #ffffff;
+    font-family: "League Spartan", sans-serif;
+    margin: 4px 0;
+}
+
+/* ==========================================================================
+   Dual Journey: How KrishiBid Works
+   ========================================================================== */
+.how-it-works-section {
+    background: #FFFDF7;
+}
+
+.journey-tab-nav {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 48px;
+}
+
+.btn-tab-journey {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 50px;
+    border: 2px solid var(--border);
+    background: #ffffff;
+    color: var(--secondary-text);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-tab-journey:hover,
+.btn-tab-journey.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(20, 83, 45, 0.15);
+}
+
+.step-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 30px 24px;
+    height: 100%;
+    position: relative;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 32px rgba(20, 83, 45, 0.09);
+    border-color: rgba(34, 197, 94, 0.4);
+}
+
+.step-number {
+    position: absolute;
+    top: 20px;
+    right: 22px;
+    font-family: "League Spartan", sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+    color: rgba(20, 83, 45, 0.08);
+}
+
+.step-icon-wrap {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: rgba(34, 197, 94, 0.12);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-bottom: 22px;
+    transition: all 0.25s ease;
+}
+
+.step-card:hover .step-icon-wrap {
+    background: var(--primary);
+    color: #ffffff;
+    transform: rotate(5deg) scale(1.05);
+}
+
+.step-title {
+    font-family: "League Spartan", sans-serif;
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.step-text {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14.5px;
+    color: var(--secondary-text);
+    line-height: 1.6;
+    margin-bottom: 14px;
+}
+
+.step-tag-pill {
+    display: inline-block;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary);
+    background: #f1f7f3;
+    padding: 3px 10px;
+    border-radius: 6px;
+}
+
+/* ==========================================================================
+   Core Innovations (Why KrishiBid)
+   ========================================================================== */
+.features-section {
+    background: #ffffff;
+}
+
+.feature-grid-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 26px;
+    height: 100%;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+}
+
+.feature-grid-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(20, 83, 45, 0.08);
+    border-color: rgba(34, 197, 94, 0.35);
+}
+
+.feature-icon-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: #f3faf5;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 22px;
+    transition: all 0.25s ease;
+}
+
+.feature-grid-card:hover .feature-icon-box {
+    background: var(--primary);
+    color: var(--accent);
+    transform: scale(1.08);
+}
+
+.feature-title {
+    font-family: "League Spartan", sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+.feature-text {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14.5px;
+    color: var(--secondary-text);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ==========================================================================
+   Inclusion & Sustainability Pillar (IEEE WIE ILS 2026 Theme)
+   ========================================================================== */
+.inclusion-section {
+    background: linear-gradient(135deg, #f3f9f5 0%, #fffbf0 100%);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.inclusion-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 26px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+}
+
+.inclusion-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(244, 185, 66, 0.18);
+    color: #92400e;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.inclusion-text h5 {
+    font-family: "League Spartan", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.inclusion-text p {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    color: var(--secondary-text);
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* ==========================================================================
+   Impact Stats Section
+   ========================================================================== */
+.impact-section {
+    background: #14532D;
+    color: #ffffff;
+    padding: 60px 0;
+}
+
+.impact-stat-item {
+    text-align: center;
+    padding: 20px;
+}
+
+.stat-metric-num {
+    font-family: "League Spartan", sans-serif;
+    font-size: clamp(2.4rem, 4.2vw, 3.6rem);
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stat-metric-label {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+/* ==========================================================================
+   Testimonials / Success Stories
+   ========================================================================== */
+.testimonials-section {
+    background: #FFFDF7;
+}
+
+.testimonial-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    position: relative;
+}
+
+.stars-rating {
+    color: var(--accent);
+    font-size: 15px;
+    margin-bottom: 16px;
+}
+
+.testimonial-quote {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text);
+    font-style: italic;
+    margin-bottom: 22px;
+    flex-grow: 1;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.author-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #eaf3ed;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    border: 1px solid var(--border);
+}
+
+.author-info h6 {
+    font-family: "League Spartan", sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.author-info p {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12.5px;
+    color: var(--secondary-text);
+    margin: 0;
+}
+
+/* ==========================================================================
+   FAQ Section
+   ========================================================================== */
+.faq-section {
+    background: #ffffff;
+}
+
+.krishi-accordion .accordion-item {
+    border: 1px solid var(--border);
+    border-radius: 14px !important;
+    margin-bottom: 14px;
+    overflow: hidden;
+}
+
+.krishi-accordion .accordion-button {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    background: #fdfefe;
+    padding: 18px 24px;
+}
+
+.krishi-accordion .accordion-button:not(.collapsed) {
+    color: var(--primary);
+    background: #f4f8f5;
+    box-shadow: none;
+}
+
+.krishi-accordion .accordion-body {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14.5px;
+    color: var(--secondary-text);
+    line-height: 1.65;
+    padding: 20px 24px;
+    background: #ffffff;
+}
+
+/* ==========================================================================
+   Dual Call-to-Action Conversion Banner
+   ========================================================================== */
+.cta-banner-section {
+    background: linear-gradient(135deg, #14532D 0%, #195e34 100%);
+    padding: 70px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-box-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    padding: 38px 30px;
+    height: 100%;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.25s ease;
+}
+
+.cta-box-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+}
+
+.cta-box-card h3 {
+    font-family: "League Spartan", sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.cta-box-card p {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15px;
+    color: #d1fae5;
+    line-height: 1.6;
+    margin-bottom: 26px;
+}
+
+.btn-cta-gold {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15.5px;
+    font-weight: 800;
+    background: var(--accent);
+    color: #17211B !important;
+    border: none;
+    padding: 13px 26px;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cta-gold:hover {
+    background: #e0a32e;
+    transform: translateY(-2px);
+    color: #17211B !important;
+}
+
+.btn-cta-white {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 15.5px;
+    font-weight: 800;
+    background: #ffffff;
+    color: var(--primary) !important;
+    border: none;
+    padding: 13px 26px;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cta-white:hover {
+    background: #f1f5f2;
+    transform: translateY(-2px);
+    color: var(--primary) !important;
+}
+
+/* ==========================================================================
+   Agritech Comprehensive Footer
+   ========================================================================== */
+.krishi-footer {
+    background: #111a14;
+    color: #e2e8e3;
+    padding: 70px 0 30px 0;
+    font-family: "Space Grotesk", sans-serif;
+}
+
+.footer-brand p {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.65;
+    margin-top: 14px;
+    max-width: 320px;
+}
+
+.footer-heading {
+    font-family: "League Spartan", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: var(--accent);
+}
+
+.hackathon-credit-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+.hackathon-credit-card strong {
+    color: var(--accent);
+}
+
+.footer-bottom-bar {
+    margin-top: 50px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #64748b;
+}
+
+/* ==========================================================================
+   Quick-View Auction Modal
+   ========================================================================== */
+.quick-view-modal .modal-content {
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    font-family: "Space Grotesk", sans-serif;
+}
+
+.quick-view-modal .modal-header {
+    background: #f7fbf8;
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+}
+
+.quick-view-modal .modal-title {
+    font-family: "League Spartan", sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--text);
+}

@@ -39,7 +39,27 @@ with app.app_context():
 
 @app.route("/")
 def home():
-    return render_template('index.html')
+    try:
+        active_auctions = Auction.query.filter_by(status="active").order_by(Auction.created_at.desc()).all()
+        total_farmers = FarmerProfile.query.count()
+        total_buyers = BuyerProfile.query.count()
+        total_listings = ProduceListing.query.count()
+        total_auctions = Auction.query.count()
+    except Exception as e:
+        active_auctions = []
+        total_farmers = 0
+        total_buyers = 0
+        total_listings = 0
+        total_auctions = 0
+
+    return render_template(
+        'index.html',
+        active_auctions=active_auctions,
+        total_farmers=total_farmers,
+        total_buyers=total_buyers,
+        total_listings=total_listings,
+        total_auctions=total_auctions
+    )
 
 from flask import jsonify
 
