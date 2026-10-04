@@ -2,11 +2,12 @@
 __pycache__/
 *.py[cod]
 *.pyo
+*.pyc
+
 
 # Virtual environment
-venv/
 .venv/
-env/
+venv/
 
 # Environment variables / secrets
 .env
@@ -20,9 +21,9 @@ instance/
 *.sqlite
 *.sqlite3
 
-# IDE
 .vscode/
-.idea/
+.id# IDE
+ea/
 
 # OS
 .DS_Store
